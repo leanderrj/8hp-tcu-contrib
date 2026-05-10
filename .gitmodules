@@ -1,3 +1,6 @@
 [submodule "upstream/8HP-TCU"]
 	path = upstream/8HP-TCU
 	url = https://github.com/damienmaguire/8HP-TCU.git
+[submodule "upstream/Stm32-vcu"]
+	path = upstream/Stm32-vcu
+	url = https://github.com/damienmaguire/Stm32-vcu.git
