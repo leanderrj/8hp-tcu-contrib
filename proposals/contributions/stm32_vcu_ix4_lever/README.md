@@ -1,7 +1,6 @@
 # PR draft: `iX4_Lever` for damienmaguire/Stm32-vcu
 
-Status: branch ready locally, not yet pushed to fork, not yet opened
-as a PR.
+Status: **OPEN** at https://github.com/damienmaguire/Stm32-vcu/pull/234
 
 ## Where it lives
 
@@ -9,7 +8,7 @@ as a PR.
 |---|---|
 | Local working clone of fork | `/tmp/Stm32-vcu-fork/` |
 | Branch | `feat/ix4-lever-bmw-g26` |
-| Fork on GitHub | https://github.com/leanderrj/Stm32-vcu *(empty until pushed)* |
+| Fork on GitHub | https://github.com/leanderrj/Stm32-vcu (branch pushed) |
 | Upstream | https://github.com/damienmaguire/Stm32-vcu |
 | PR body draft | [`PR_BODY.md`](PR_BODY.md) |
 
