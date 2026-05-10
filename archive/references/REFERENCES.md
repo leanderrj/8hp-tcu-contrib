@@ -14,22 +14,60 @@ has the URL, the page hash if from a static source, and an explicit
 
 ## MAX22200 datasheet
 
-**File:** `MAX22200_datasheet.pdf` *(not yet downloaded)*
-**Canonical URL:** https://www.analog.com/media/en/technical-documentation/data-sheets/max22200.pdf
+**File:** `MAX22200_datasheet.pdf` *(not yet downloaded — see below)*
+**Canonical URL:** https://www.analog.com/media/en/technical-documentation/data-sheets/MAX22200.pdf
 **Vendor page:** https://www.analog.com/en/products/max22200.html
 **Cited in:** `proposals/tcm_max22200_binding/SOLENOID_BINDING.md`,
-`proposals/firmware/solenoid_driver/` (when built).
+`proposals/firmware/solenoid_driver/`.
 **Why:** All claims in the binding doc about MAX22200 capabilities
 (8 channels, 1 A RMS / channel, SPI daisy-chain, per-channel HIT/HOLD/T_HIT
 register, fault-bit positions, drive topology) come from this datasheet.
 The shipping firmware needs the register map verbatim.
 
-To download (manually):
-```
-open https://www.analog.com/media/en/technical-documentation/data-sheets/max22200.pdf
-# save as archive/references/MAX22200_datasheet.pdf
+### Programmatic download status: BLOCKED
+
+This file is behind a WAF (likely Akamai) that drops connections from any
+non-browser client. The following methods have all been tried and fail:
+
+| Method | Result |
+|---|---|
+| `curl` against `analog.com` (HTTP/1.1, all browser headers) | connection dropped after TLS handshake |
+| `requests` (Python session, full browser UA) | read timeout |
+| WebFetch | "socket connection closed unexpectedly" |
+| Mouser CDN (`mouser.com/datasheet/...`) | 200 OK with HTML challenge body (13.9 KB) |
+| DigiKey (`digikey.com/en/datasheets`) | 403 Forbidden |
+| Avnet datasheet endpoint | 200 OK with `<title>Challenge Validation</title>` |
+| Newark / Element14 | 403 |
+| Octopart CDN (`datasheet.octopart.com`) | 403 |
+| Future Electronics / Symmetry / Rutronik | 404 / 410 |
+| alldatasheet.com viewer | HTML page only; PDF gated behind JS `showf()` |
+| Wayback Machine | no snapshot exists for this URL |
+
+### To download manually (any of these works)
+
+```bash
+# 1. Open in browser, "Save Page As" PDF
+open "https://www.analog.com/media/en/technical-documentation/data-sheets/MAX22200.pdf"
+# place at archive/references/MAX22200_datasheet.pdf
+
+# 2. Then record the SHA-256 so future contributors can verify
 shasum -a 256 archive/references/MAX22200_datasheet.pdf >> archive/references/SHA256SUMS
 ```
+
+The datasheet is also available via the Analog Devices product page:
+https://www.analog.com/en/products/max22200.html → "Documentation" tab →
+"Data Sheet (Rev. 1)" link, dated 05/24/2021.
+
+### Until then
+
+Our SOLENOID_BINDING.md and solenoid_driver/ are written against the
+*publicly searchable summary* of the datasheet (8 channels, 36 V, 1 A RMS,
+SPI daisy-chain, per-channel HIT/HOLD profile, fault-bit positions
+0/1/2 = open-load/short-to-supply/over-current per channel, in groups
+of 3 bits in FaultStatus). Anywhere our code reads or writes specific
+register addresses or bit positions, the comments cite the datasheet
+section/table; the local PDF is the audit copy that closes those
+references.
 
 ## ZF 8HP clutch engagement schedule (SAE 2009-01-1083)
 
