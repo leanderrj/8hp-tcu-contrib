@@ -1,6 +1,16 @@
 # PR draft: `iX4_Lever` for damienmaguire/Stm32-vcu
 
-Status: **OPEN** at https://github.com/damienmaguire/Stm32-vcu/pull/234
+Status: **closed** without merge — see #234 below.
+
+PR #234 was opened, then closed by the author within a few minutes,
+before any human review. The "At least 1 approving review is required"
+message visible on the PR is the repo's default branch-protection
+boilerplate (every PR shows it), not a rejection signal. The branch
+`feat/ix4-lever-bmw-g26` on the fork is intact; the work can be
+re-submitted at any time, or pulled from the fork directly without a
+PR if a maintainer prefers.
+
+PR URL: https://github.com/damienmaguire/Stm32-vcu/pull/234
 
 ## Where it lives
 
