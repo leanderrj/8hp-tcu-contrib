@@ -48,6 +48,36 @@ public:
     void SetMotorRpm(int16_t rpm);
     void SetTorqueCutAck(bool ack);
 
+    /* Setters used by the TCU side to populate TX status frames.
+     * The bind layer calls these every loop with the current state
+     * machine outputs; PackTx() then emits the frames over the wire. */
+    void SetStatus1Telemetry(uint8_t current_gear, uint8_t target_gear_echo,
+                              uint8_t tcu_state, bool shift_in_progress,
+                              bool tcu_ready, bool any_fault,
+                              bool park_lock);
+    void SetStatus1Sensors(uint16_t input_rpm, uint16_t output_rpm,
+                            int8_t oil_temp_c, uint8_t line_pressure_raw);
+    void SetStatus2Telemetry(uint16_t fault_bits, uint8_t shift_count,
+                              int8_t hw_temp_c,
+                              uint16_t sol_a_current_ma = 0,
+                              uint16_t sol_b_current_ma = 0);
+    void SetShiftStatusTelemetry(uint8_t shift_phase, bool torque_cut_request,
+                                   bool shift_active, uint8_t shift_fault_code,
+                                   uint8_t ramp_percent, uint16_t elapsed_ms,
+                                   uint8_t current_clutch_set,
+                                   uint8_t target_clutch_set,
+                                   uint8_t ramping_in_set,
+                                   uint8_t ramping_out_set);
+    void SetPumpStatusTelemetry(uint8_t pump_state, bool run_ack,
+                                 bool lin_fault, bool alt_fault,
+                                 uint16_t pump_rpm, uint8_t voltage_raw,
+                                 uint8_t current_raw, uint8_t retry_count);
+
+    /* Latched VCU acks for the bind layer to read. */
+    bool VcuTorqueCutAck() const { return latchedVehInfo.torque_cut_ack != 0; }
+    bool ParkLockEngagedTx() const { return tx_park_lock_engaged_; }
+    void SetParkLockEngagedTx(bool b) { tx_park_lock_engaged_ = b; }
+
     /* Latched view of the most recent TCU status frames, scaled to
      * physical units. Stays at last-known-good if the TCU stops sending. */
     uint8_t  CurrentGear()      const { return latchedStatus1.current_gear;     }
@@ -90,9 +120,18 @@ private:
     zf8hp_tcu_tcu_status2_t      latchedStatus2{};
     zf8hp_tcu_tcu_shift_status_t latchedShift{};
     zf8hp_tcu_tcu_pump_status_t  latchedPump{};
+    zf8hp_tcu_vcu_gear_request_t latchedGearReq{};   // when running on the TCU side, this is the inbound frame
+    zf8hp_tcu_vcu_vehicle_info_t latchedVehInfo{};
     zf8hp_tcu_vcu_gear_request_t txGearReq{};
     zf8hp_tcu_vcu_vehicle_info_t txVehInfo{};
 
+    /* TCU-side TX struct holders. */
+    zf8hp_tcu_tcu_status1_t      txStatus1{};
+    zf8hp_tcu_tcu_status2_t      txStatus2{};
+    zf8hp_tcu_tcu_shift_status_t txShift{};
+    zf8hp_tcu_tcu_pump_status_t  txPump{};
+
+    bool     tx_park_lock_engaged_ = false;
     bool     pumpFrameSeen   = false;
     bool     shiftFrameSeen  = false;
     uint16_t s1Decodes       = 0;
