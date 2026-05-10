@@ -1,0 +1,67 @@
+pin,name,electrical_type,group,direction,notes
+# ZF G8P75HZ TCM 49-pin internal connector pin map.
+# Source: archive/forum/TCM_Pinout.pdf (Damien Maguire, openinverter forum
+# thread #6047, post 2026-05-10). Cross-checked in
+# proposals/tcm_max22200_binding/PINOUT.md.
+#
+# electrical_type follows the KiCad pin-type convention:
+#   power_in   = 12 V supply / GND from harness
+#   power_out  = supply emitted by TCM
+#   passive    = pure conductor (sensor return, ground)
+#   input      = digital or analog input to the TCM
+#   output     = digital or analog output from the TCM
+#   bidirectional = two-way bus (LIN, CAN H/L)
+#   no_connect = pin physically present but unassigned in source PDF
+#
+# direction: "from_tcm" / "to_tcm" / "bidir" / "n/a" — describes the
+# electrical sense of the signal at this pin, used by tests to flag
+# obvious mistakes.
+1,NC1,no_connect,reserved,n/a,unassigned in source PDF — likely sensor return or 5V
+2,LIN_PUMP,bidirectional,communication,bidir,LIN bus to aux 12 V oil pump (HZ hybrid only)
+3,NC3,no_connect,reserved,n/a,unassigned in source PDF
+4,NC4,no_connect,reserved,n/a,unassigned in source PDF
+5,SOL_PARK_HOLD,output,solenoid,from_tcm,Park Hold solenoid (latching ON/OFF)
+6,THERMISTOR_A,input,sensor,to_tcm,Oil temperature NTC pair, terminal A
+7,THERMISTOR_B,input,sensor,to_tcm,Oil temperature NTC pair, terminal B
+8,NC8,no_connect,reserved,n/a,unassigned in source PDF
+9,NC9,no_connect,reserved,n/a,unassigned in source PDF
+10,NC10,no_connect,reserved,n/a,unassigned in source PDF
+11,NC11,no_connect,reserved,n/a,unassigned in source PDF
+12,PARK_SENSE_GND,passive,sensor,n/a,Common ground for the park-position switches
+13,PARK_POS_1,input,sensor,to_tcm,Park position switch contact 1 (engaged)
+14,PARK_POS_2,input,sensor,to_tcm,Park position switch contact 2 (released)
+15,SPEED_SENSE_5V,power_out,sensor,from_tcm,+5 V excitation to shaft speed sensors (red wire — annotation in source PDF marked '?')
+16,INPUT_SHAFT_RPM,input,sensor,to_tcm,Input shaft (turbine) speed sensor signal
+17,OUTPUT_SHAFT_RPM,input,sensor,to_tcm,Output shaft speed sensor signal
+18,NC18,no_connect,reserved,n/a,unassigned in source PDF
+19,EXT11,passive,external,bidir,Routes to external connector pin 11
+20,EXT15,passive,external,bidir,Routes to external connector pin 15
+21,EXT16,passive,external,bidir,Routes to external connector pin 16
+22,EXT13_T30A,power_in,external,to_tcm,Routes to ext pin 13; paralleled with pin 23 for +12 V T30 supply current capacity
+23,EXT13_T30,power_in,external,to_tcm,OEM T30 +12 V battery (paralleled with pin 22)
+24,EXT14_T31,power_in,external,to_tcm,OEM T31 chassis ground (paralleled with pin 25)
+25,EXT14_T31B,power_in,external,to_tcm,Routes to ext pin 14; paralleled with pin 24 for return current capacity
+26,EXT9_T15,power_in,external,to_tcm,OEM T15 ignition wake-up
+27,EXT7,passive,external,bidir,Routes to external connector pin 7
+28,EXT12,passive,external,bidir,Routes to external connector pin 12
+29,EXT2,passive,external,bidir,Routes to external connector pin 2
+30,EXT6_PTCAN1_L,bidirectional,communication,bidir,OEM PT-CAN 1 LOW (vehicle powertrain CAN)
+31,EXT5_PTCAN1_H,bidirectional,communication,bidir,OEM PT-CAN 1 HIGH
+32,EXT1,passive,external,bidir,Routes to external connector pin 1
+33,EXT4_PTCAN2_H,bidirectional,communication,bidir,OEM PT-CAN 2 HIGH
+34,EXT3_PTCAN2_L,bidirectional,communication,bidir,OEM PT-CAN 2 LOW
+35,EXT8,passive,external,bidir,Routes to external connector pin 8
+36,EXT10,passive,external,bidir,Routes to external connector pin 10
+37,VBAT_SOL_A,power_in,supply,to_tcm,+12 V supply to solenoid bank (paralleled with 38/39/40 for current capacity)
+38,VBAT_SOL_B,power_in,supply,to_tcm,+12 V supply to solenoid bank (paralleled)
+39,VBAT_SOL_C,power_in,supply,to_tcm,+12 V supply to solenoid bank (paralleled)
+40,VBAT_SOL_D,power_in,supply,to_tcm,+12 V supply to solenoid bank (paralleled)
+41,SOL_CLUTCH_A,output,solenoid,from_tcm,A Clutch proportional solenoid (low-side / current-controlled)
+42,SOL_CLUTCH_D,output,solenoid,from_tcm,D Clutch proportional solenoid
+43,SOL_CLUTCH_B,output,solenoid,from_tcm,B Clutch proportional solenoid
+44,SOL_CLUTCH_E,output,solenoid,from_tcm,E Clutch proportional solenoid
+45,SOL_CLUTCH_C,output,solenoid,from_tcm,C Clutch proportional solenoid
+46,SOL_TCC,output,solenoid,from_tcm,Torque Converter Clutch lockup solenoid (proportional)
+47,SOL_LINE_PRESSURE,output,solenoid,from_tcm,Main hydraulic line pressure regulator (proportional, high duty cycle)
+48,SOL_PARK_RELEASE,output,solenoid,from_tcm,Park Release solenoid (pulsed)
+49,NC49,no_connect,reserved,n/a,unassigned in source PDF

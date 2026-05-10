@@ -1,0 +1,23 @@
+pin,name,electrical_type,direction,oem_label,tcm_pin,notes
+# OEM Mechatronik external 16-pin connector — the wires that go out to the
+# vehicle harness. Source: archive/forum/TCM_Pinout.pdf cross-referenced
+# with proposals/tcm_max22200_binding/PINOUT.md.
+#
+# `tcm_pin` is the corresponding internal-connector pin per
+# tcm_pinout.csv. Tests verify both directions of this mapping.
+1,EXT1,passive,bidir,,32,unlabeled in source PDF
+2,EXT2,passive,bidir,,29,unlabeled in source PDF
+3,PTCAN2_L,bidirectional,bidir,PT-CAN 2 LOW,34,vehicle powertrain CAN bus 2 low
+4,PTCAN2_H,bidirectional,bidir,PT-CAN 2 HIGH,33,vehicle powertrain CAN bus 2 high
+5,PTCAN1_H,bidirectional,bidir,PT-CAN 1 HIGH,31,vehicle powertrain CAN bus 1 high
+6,PTCAN1_L,bidirectional,bidir,PT-CAN 1 LOW,30,vehicle powertrain CAN bus 1 low
+7,EXT7,passive,bidir,,27,unlabeled in source PDF
+8,EXT8,passive,bidir,,35,unlabeled in source PDF
+9,T15_WAKE,power_in,to_tcm,T15 Wakeup,26,ignition wake-up; logic-level high while key in run/start
+10,EXT10,passive,bidir,,36,unlabeled in source PDF
+11,EXT11,passive,bidir,,19,unlabeled in source PDF
+12,EXT12,passive,bidir,,28,unlabeled in source PDF
+13,T30_VBAT,power_in,to_tcm,T30 +12V,23,permanent +12 V battery (paralleled internally to TCM pin 22)
+14,T31_GND,power_in,to_tcm,T31 GND,24,chassis ground (paralleled internally to TCM pin 25)
+15,EXT15,passive,bidir,,20,unlabeled in source PDF
+16,EXT16,passive,bidir,,21,unlabeled in source PDF
