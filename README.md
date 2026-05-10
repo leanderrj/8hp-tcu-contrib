@@ -1,131 +1,178 @@
-# ZF 8HP — openinverter contribution workspace
+# 8hp-tcu-contrib
 
-Workspace supporting Damien Maguire's open-source [ZF 8HP TCU](https://github.com/damienmaguire/8HP-TCU)
-project ([openinverter.org](https://openinverter.org)). The project is mid-design as of May 2026:
-the aux LIN pump just came up after a nine-day reverse-engineering effort, the in-Mechatronik PCB
-is being redesigned around the MAX22200 solenoid driver, and the TCM ↔ VCU CAN protocol does not
-yet exist. This repo is the work that goes alongside that, in the gaps.
+Adjacent-contribution workspace for the openinverter [ZF 8HP TCU
+project](https://github.com/damienmaguire/8HP-TCU) and the wider
+[`Stm32-vcu`](https://github.com/damienmaguire/Stm32-vcu) ecosystem.
+Research, analysis, drift-tested firmware modules, KiCad connector
+model, draft schematic netlist, ISO 26262-3 HARA, capture corpus.
 
-## What's in here
+This repo is not a fork. See
+[`docs/upstream-relationship.md`](#upstream-relationship) below for the
+shape.
 
-| Layer | Path | Status |
-|---|---|---|
-| Forum threads, captures, video transcript | `archive/` | snapshot of thread #6047 / #6926 / #7028 / #7103 + Damien's TCM pinout PDF + 553 BMW i4 G26 CAN frames + LIN A/C log |
-| LIN aux-pump protocol distilled | `notes/lin_pump_protocol.md` | from forum #7103 RE |
-| iX4 0x3F9 shifter analysis | `notes/ix4_can_analysis.md` | derived from the captures |
-| Contribution plan | `notes/contribution_plan.md` | what's open and where |
-| TCU↔VCU CAN protocol *(draft)* | `proposals/dbc/` | 5 frames, 41 signals, validated with `cantools` |
-| BMW G26 0x3F9 CRC8 *(empirically solved)* | `proposals/firmware/bmw_g26_lever/` | 553/553 frames, reproducible with `find_crc.py` |
-| iX4_Lever Stm32-vcu PR *(verified building)* | `proposals/firmware/bmw_g26_lever/` | 33 host assertions pass on real upstream |
-| Can_ZF8HP codec PR *(verified building)* | `proposals/firmware/can_codegen/` | 24 host assertions pass on real upstream |
-| TCM pinout × MAX22200 design analysis | `proposals/tcm_max22200_binding/` | flags the 9-vs-8 channel issue, four-option tradeoff |
-| Pytest capture-replay harness | `proposals/test_harness/` | 30 assertions, replays all 553 frames |
-| Cloned upstream repos | `repo/` *(gitignored)* | local context |
+## Upstream relationship
 
-## Test totals (May 10 2026)
-
-| Suite | Where | Assertions | Status |
-|---|---|---|---|
-| C++ on `make Test` (Stm32-vcu host) | `proposals/firmware/bmw_g26_lever/` | 33 | passing |
-| C++ on `make Test` (Stm32-vcu host) | `proposals/firmware/can_codegen/` | 24 | passing |
-| pytest (full corpus replay) | `proposals/test_harness/` | 30 | passing |
-| **Total** | | **87** | passing |
-
-All three suites build and run against unmodified upstream `damienmaguire/Stm32-vcu` master.
-
-## Two PRs ready to land
-
-### `iX4_Lever` — G-chassis BMW shifter for Stm32-vcu
-
-Adds a `Shifter` implementation for the 2022+ BMW G-chassis iDrive rotary selector
-(CAN ID `0x3F9`). Empirically-determined CRC8 parameters (poly `0x1D`, xorout
-`0x04`, bytes [1..7] — same algorithm family as `F30_Lever`, different per-ID
-xorout). Patches in `proposals/firmware/bmw_g26_lever/INTEGRATION.md`; verified
-to build and pass 33 host assertions on upstream master.
-
-Open: 0x32-vs-0x35 R/D mapping is a hypothesis pending one forum reply; flipping
-two `case` labels resolves it either way.
-
-### `Can_ZF8HP` — DBC-driven codec for the TCU↔VCU protocol
-
-The DBC at `proposals/dbc/zf8hp-tcu.dbc` is the protocol; `proposals/firmware/can_codegen/zf8hp_tcu.{h,c}`
-is the cantools-generated C99 encoder/decoder; `Can_ZF8HP.{h,cpp}` is the C++
-wrapper bridging into the VCU's `Param` and `CanHardware` world. Schema changes
-go in the DBC; `bash proposals/firmware/can_codegen/generate.sh` regenerates the
-C source. Both sides of the link consume the same generated code.
-
-Open: protocol is **draft v0.1** — five points called out in `proposals/dbc/PROTOCOL.md`
-need community input (counter+CRC adoption, ID band reservations, torque-reduction
-handshake during shifts, where adaptation values live, manual gear range).
-
-## Reproducing the empirical work
-
-```bash
-# 1. Re-derive the BMW G26 0x3F9 CRC parameters from the captures
-python3 -m venv .venv && source .venv/bin/activate
-pip install cantools pytest
-python3 proposals/firmware/bmw_g26_lever/find_crc.py
-# -> "range=b1..7  poly=0x1D  init^xorout=0x04  refin=False refout=False"
-
-# 2. Run the full pytest harness
-cd proposals/test_harness && pip install -e . && pytest
-# -> 30 passed in ~4s
-
-# 3. Apply both PRs and run the C++ host tests
-git clone https://github.com/damienmaguire/Stm32-vcu.git
-cd Stm32-vcu && git submodule update --init --depth 1
-# (apply the patches per each INTEGRATION.md)
-make Test && ./test/test_vcu
-# -> "All tests passed"
 ```
+                          tracks via submodule
+                    ┌──────────────────────────────────┐
+                    ▼                                  │
+leanderrj/8hp-tcu-contrib (standalone)              upstream
+                    │                                  ▲
+                    │ pinned at upstream/8HP-TCU       │
+                    │ pinned at upstream/Stm32-vcu     │
+                    │                                  │
+                    │ separate work-area forks for PRs:│
+                    ▼                                  │
+leanderrj/8HP-TCU   (fork) ─────PR──▶ damienmaguire/8HP-TCU
+leanderrj/Stm32-vcu (fork) ─────PR──▶ damienmaguire/Stm32-vcu
+```
+
+| Repo | Role |
+|---|---|
+| `leanderrj/8hp-tcu-contrib` | research + analysis + reference |
+| `leanderrj/Stm32-vcu` | PR-staging fork |
+| `leanderrj/8HP-TCU` | PR-staging fork |
+| `upstream/8HP-TCU/` (submodule) | pinned upstream of `damienmaguire/8HP-TCU` |
+| `upstream/Stm32-vcu/` (submodule) | pinned upstream of `damienmaguire/Stm32-vcu` |
 
 ## Layout
 
 ```
-archive/                          raw research material
-  captures/                         BMW iX4 G26 CAN/LIN logs (forum #7028)
-  forum/                            archived openinverter threads + TCM pinout PDF
-  video/                            yt-dlp subtitles for "Project 03" video
-notes/                            distilled research, ready to read
-  transcript.md                     "Project 03" video transcript
-  lin_pump_protocol.md              LIN aux pump protocol distilled from #7103
-  ix4_can_analysis.md               0x3F9 shifter analysis
-  contribution_plan.md              where the gaps are
-proposals/                        PR-ready artifacts and design analysis
-  dbc/                              draft TCU↔VCU CAN protocol
+archive/
+  captures/                 553-frame BMW i4 G26 CAN log + LIN A/C log
+  forum/                    archived openinverter threads (markdown) + TCM_Pinout.pdf
+  references/               MAX22200 datasheet + ZF gearset patent + SHA256SUMS
+  video/                    yt-dlp subtitles for "Project 03"
+notes/                      distilled research
+  transcript.md             video transcript
+  lin_pump_protocol.md      LIN aux pump protocol (from forum #7103)
+  ix4_can_analysis.md       0x3F9 shifter frame analysis
+  contribution_plan.md
+proposals/
+  dbc/
+    zf8hp-tcu.dbc           draft TCU↔VCU CAN protocol (6 frames, 54 signals)
+    PROTOCOL.md
   firmware/
-    bmw_g26_lever/                  iX4_Lever shifter PR (33 tests)
-    can_codegen/                    Can_ZF8HP codec PR (24 tests)
-  tcm_max22200_binding/             pinout decode + 9-vs-8 channel analysis
-  test_harness/                     pytest full-corpus replay (30 tests)
-repo/                             cloned upstream repos (gitignored)
+    bmw_g26_lever/          iX4_Lever shifter (PR-ready for Stm32-vcu)
+    can_codegen/            cantools-driven C99 codec + Can_ZF8HP wrapper
+    shift_logic/            8HP shift state machine + clutch table
+    park_lock/              safety-critical pawl state machine
+    solenoid_driver/        MAX22200 register layout + frame builder
+    tcu_bind/               per-tick orchestrator wiring the modules together
+  hardware/
+    oem_interface/          KiCad symbol library for the 49+16 pin OEM connectors
+    oi_8hp_tcu/             draft schematic netlist for the in-Mechatronik board
+  safety/
+    hara.py                 ISO 26262-3 HARA, 12 hazards, 13 derived requirements
+    HARA_REPORT.txt         pre-generated formatted report
+  tcm_max22200_binding/     pinout decode + 9-vs-8 channel design analysis
+  test_harness/             pytest full-corpus replay + scenario tests + plant model
+  contributions/
+    stm32_vcu_ix4_lever/    PR draft for damienmaguire/Stm32-vcu
+    8hp_tcu_software_skeleton/  PR draft for damienmaguire/8HP-TCU
+  forum_reply_6047.md       drafted reply for the openinverter master thread
+upstream/
+  8HP-TCU/                  submodule pinned to damienmaguire/8HP-TCU
+  Stm32-vcu/                submodule pinned to damienmaguire/Stm32-vcu
 ```
 
-## Scope honesty
+## Tests
 
-This repo is **not** the TCU firmware. The TCU firmware is greenfield and
-needs the bench (oscilloscope on solenoid currents, LIN xcvr connected to
-the pump, real Mechatronik in front of you) — none of which we have.
+Total: **219 host-runnable assertions** (104 C++ via `make Test`, 115
+pytest), all passing. No bench, no peripheral access, no STM32
+toolchain required for any of them.
 
-What this repo *does* contribute:
+| Suite | Path | Assertions |
+|---|---|---|
+| C++ — iX4_Lever | `proposals/firmware/bmw_g26_lever/` | 33 |
+| C++ — Can_ZF8HP codec | `proposals/firmware/can_codegen/` | 26 |
+| C++ — shift_logic | `proposals/firmware/shift_logic/` | 12 |
+| C++ — park_lock | `proposals/firmware/park_lock/` | 10 |
+| C++ — solenoid_driver | `proposals/firmware/solenoid_driver/` | 13 |
+| C++ — tcu_bind | `proposals/firmware/tcu_bind/` | 10 |
+| pytest — full-corpus replay + DBC roundtrip | `proposals/test_harness/` | 55 |
+| pytest — LIN pump simulator | `proposals/test_harness/` | 10 |
+| pytest — HARA validation | `proposals/test_harness/tests/test_hara.py` | 12 |
+| pytest — scenario drive cycles | `proposals/test_harness/tests/scenarios/` | 8 |
+| pytest — plant model | `proposals/test_harness/tests/test_plant_model.py` | 11 |
+| pytest — OEM connector model | `proposals/test_harness/tests/test_oem_pinout.py` | 16 |
+| pytest — schematic netlist | `proposals/test_harness/tests/test_oi_8hp_tcu_schematic.py` | 24 |
 
-- **One closed empirical question** (the BMW G26 CRC algorithm)
-- **One net-new shifter implementation** (`iX4_Lever`) that drops into Stm32-vcu and adds G-chassis BMW donor cars to the openinverter ecosystem
-- **One protocol draft and codec** (`zf8hp-tcu.dbc` + `Can_ZF8HP`) for the still-unwritten TCM↔VCU link
-- **One design-time finding** (9 solenoids vs 8 MAX22200 channels) with a four-option tradeoff analysis and a recommended fix
-- **Test infrastructure** (`pytest` harness + 87 host-runnable assertions across C++ and Python) that every future PR can plug into
+C++ tests build against unmodified `damienmaguire/Stm32-vcu` master
+via the `upstream/Stm32-vcu` submodule. pytest runs from
+`proposals/test_harness/` after `pip install -e .`.
 
-What it deliberately does not do:
+## PR drafts
 
-- Write the TCU firmware (no hardware to validate against)
-- Fuzz the LIN aux pump bytes 1/3/4/5 (needs Damien's bench)
-- Reverse-engineer factory BMW PT-CAN traffic (needs an F-/G-chassis donor)
+Branches prepared, builds verified, **not yet pushed or opened**.
 
-## Active references
+### `iX4_Lever` for `damienmaguire/Stm32-vcu`
 
-- Master 8HP TCU thread: https://openinverter.org/forum/viewtopic.php?t=6047
-- "Pump of Doom" LIN reverse engineering: https://openinverter.org/forum/viewtopic.php?t=7103
+- Working clone: `/tmp/Stm32-vcu-fork` on branch `feat/ix4-lever-bmw-g26`
+- Diff: 9 files, 351 insertions
+- Body: [`proposals/contributions/stm32_vcu_ix4_lever/PR_BODY.md`](proposals/contributions/stm32_vcu_ix4_lever/PR_BODY.md)
+- Status: 33 host assertions pass on upstream master
+
+### Firmware skeleton + connector model for `damienmaguire/8HP-TCU`
+
+- Working clone: `/tmp/8HP-TCU-fork` on branch
+  `feat/firmware-skeleton-and-connector-model`
+- Diff: 26 files, ~3 000 insertions
+- Body: [`proposals/contributions/8hp_tcu_software_skeleton/PR_BODY.md`](proposals/contributions/8hp_tcu_software_skeleton/PR_BODY.md)
+- Status: 35 host assertions pass
+
+Each subdirectory's `README.md` has the exact `gh pr create` command
+to open the corresponding PR.
+
+## Reproducing
+
+```bash
+# Clone with submodules
+git clone --recurse-submodules https://github.com/leanderrj/8hp-tcu-contrib.git
+cd 8hp-tcu-contrib
+
+# Re-derive the BMW G26 0x3F9 CRC parameters from the captures
+python3 proposals/firmware/bmw_g26_lever/find_crc.py
+# → range=b1..7  poly=0x1D  init^xorout=0x04  refin=False refout=False
+
+# Sweep CRC across every BMW E2E frame in the captures
+python3 proposals/firmware/bmw_g26_lever/find_crc_batch.py
+# → 24 / 33 candidates fit BMW CRC8/0x1D, full table in G26_CRC_CATALOG.md
+
+# Run the full pytest harness
+python3 -m venv .venv && source .venv/bin/activate
+pip install cantools pytest pyyaml
+cd proposals/test_harness && pip install -e . && pytest
+# → 115 passed (8 skipped if optional caros_integration profile absent)
+
+# Run the C++ host tests against upstream Stm32-vcu master
+# (procedure documented in proposals/firmware/*/INTEGRATION.md)
+cd ../../upstream/Stm32-vcu
+git submodule update --init --depth 1   # pulls libopeninv
+# Apply patches from each INTEGRATION.md, then:
+make Test && ./test/test_vcu
+# → All tests passed
+
+# Verify reference PDFs against archived SHA-256
+shasum -c archive/references/SHA256SUMS
+# → US7789799B2_zf8hp.pdf: OK
+# → MAX22200_datasheet.pdf: OK
+```
+
+## License
+
+Project is GPLv3 to match the upstream openinverter projects this
+contributes to. Reference PDFs in `archive/references/` retain their
+original publishers' copyright (cite-only).
+
+## References
+
+- 8HP-TCU project: https://github.com/damienmaguire/8HP-TCU
+- ZombieVerter VCU: https://github.com/damienmaguire/Stm32-vcu
+- Master 8HP TCU forum thread: https://openinverter.org/forum/viewtopic.php?t=6047
+- "Pump of Doom" LIN RE: https://openinverter.org/forum/viewtopic.php?t=7103
 - BMW i4 G26 CAN/LIN captures: https://openinverter.org/forum/viewtopic.php?t=7028
-- ZombieVerter VCU V1.2/1.3 hardware: https://openinverter.org/forum/viewtopic.php?t=6926
-- 8HP-TCU hardware repo: https://github.com/damienmaguire/8HP-TCU
-- Stm32-vcu firmware: https://github.com/damienmaguire/Stm32-vcu
+- ZombieVerter VCU V1.2/1.3: https://openinverter.org/forum/viewtopic.php?t=6926
+- ZF 8HP family: https://en.wikipedia.org/wiki/ZF_8HP_transmission
+- SAE 2009-01-1083 (Greiner & Grumbach): clutch engagement schedule
+- US 7,789,799 B2 (Diosi et al., ZF): Ravigneaux gearset disclosure
