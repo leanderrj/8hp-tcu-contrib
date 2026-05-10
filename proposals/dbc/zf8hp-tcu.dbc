@@ -1,0 +1,131 @@
+VERSION "DRAFT-0.1"
+
+
+NS_ :
+	NS_DESC_
+	CM_
+	BA_DEF_
+	BA_
+	VAL_
+	CAT_DEF_
+	CAT_
+	FILTER
+	BA_DEF_DEF_
+	EV_DATA_
+	ENVVAR_DATA_
+	SGTYPE_
+	SGTYPE_VAL_
+	BA_DEF_SGTYPE_
+	BA_SGTYPE_
+	SIG_TYPE_REF_
+	VAL_TABLE_
+	SIG_GROUP_
+	SIG_VALTYPE_
+	SIGTYPE_VALTYPE_
+	BO_TX_BU_
+	BA_DEF_REL_
+	BA_REL_
+	BA_DEF_DEF_REL_
+	BU_SG_REL_
+	BU_EV_REL_
+	BU_BO_REL_
+	SG_MUL_VAL_
+
+BS_:
+
+BU_: VCU TCU
+
+
+VAL_TABLE_ TargetGear 0 "P" 1 "R" 2 "N" 3 "D" 4 "S" 5 "M1" 6 "M2" 7 "M3" 8 "M4" 9 "M5" 10 "M6" 11 "M7" 12 "M8" 13 "Limp" 15 "Invalid" ;
+VAL_TABLE_ DriveMode 0 "Comfort" 1 "Sport" 2 "Eco" 3 "Snow" 4 "Manual" 5 "Launch" 15 "Reserved" ;
+VAL_TABLE_ TcuState 0 "Init" 1 "Idle" 2 "Park" 3 "Reverse" 4 "Neutral" 5 "Drive" 6 "Shifting" 7 "NeutralHold" 8 "Limp" 15 "Fault" ;
+VAL_TABLE_ PumpState 0 "Off" 1 "Coldstart" 2 "Phase2Ready" 3 "Run" 4 "WatchdogFault" 5 "AltFault" 6 "NotPresent" 7 "Reserved" ;
+VAL_TABLE_ CurrentGear 0 "Neutral" 1 "G1" 2 "G2" 3 "G3" 4 "G4" 5 "G5" 6 "G6" 7 "G7" 8 "G8" 9 "Reverse" 14 "Shifting" 15 "Invalid" ;
+
+
+BO_ 1312 VCU_GearRequest: 8 VCU
+ SG_ TargetGear : 0|4@1+ (1,0) [0|15] "" TCU
+ SG_ DriveMode : 4|4@1+ (1,0) [0|15] "" TCU
+ SG_ AccelPedal : 8|8@1+ (0.5,0) [0|100] "%" TCU
+ SG_ TorqueRequest : 16|16@1- (1,0) [-32768|32767] "Nm" TCU
+ SG_ VehicleSpeed : 32|16@1+ (0.01,0) [0|655.35] "km/h" TCU
+ SG_ BrakePressed : 48|1@1+ (1,0) [0|1] "" TCU
+ SG_ FaultClear : 49|1@1+ (1,0) [0|1] "" TCU
+ SG_ ForceShift : 50|1@1+ (1,0) [0|1] "" TCU
+ SG_ VcuReady : 51|1@1+ (1,0) [0|1] "" TCU
+ SG_ Counter520 : 56|4@1+ (1,0) [0|15] "" TCU
+
+BO_ 1313 VCU_VehicleInfo: 8 VCU
+ SG_ ActualTorque : 0|16@1- (1,0) [-32768|32767] "Nm" TCU
+ SG_ MotorRPM : 16|16@1- (1,0) [-32768|32767] "rpm" TCU
+ SG_ MotorTemp : 32|8@1- (1,-40) [-40|215] "C" TCU
+ SG_ BatterySOC : 40|8@1+ (0.5,0) [0|100] "%" TCU
+ SG_ ChargingActive : 48|1@1+ (1,0) [0|1] "" TCU
+ SG_ RegenAllowed : 49|1@1+ (1,0) [0|1] "" TCU
+ SG_ HVPresent : 50|1@1+ (1,0) [0|1] "" TCU
+ SG_ Counter521 : 56|4@1+ (1,0) [0|15] "" TCU
+
+
+BO_ 1344 TCU_Status1: 8 TCU
+ SG_ CurrentGear : 0|4@1+ (1,0) [0|15] "" VCU
+ SG_ TargetGearEcho : 4|4@1+ (1,0) [0|15] "" VCU
+ SG_ TcuState : 8|4@1+ (1,0) [0|15] "" VCU
+ SG_ ShiftInProgress : 12|1@1+ (1,0) [0|1] "" VCU
+ SG_ TcuReady : 13|1@1+ (1,0) [0|1] "" VCU
+ SG_ AnyFault : 14|1@1+ (1,0) [0|1] "" VCU
+ SG_ ParkLock : 15|1@1+ (1,0) [0|1] "" VCU
+ SG_ InputShaftRPM : 16|16@1+ (1,0) [0|65535] "rpm" VCU
+ SG_ OutputShaftRPM : 32|16@1+ (1,0) [0|65535] "rpm" VCU
+ SG_ OilTemp : 48|8@1- (1,-40) [-40|215] "C" VCU
+ SG_ LinePressure : 56|8@1+ (0.1,0) [0|25.5] "bar" VCU
+
+BO_ 1345 TCU_Status2: 8 TCU
+ SG_ SolACurrent : 0|16@1+ (1,0) [0|65535] "mA" VCU
+ SG_ SolBCurrent : 16|16@1+ (1,0) [0|65535] "mA" VCU
+ SG_ FaultBits : 32|16@1+ (1,0) [0|65535] "" VCU
+ SG_ ShiftCount : 48|8@1+ (1,0) [0|255] "" VCU
+ SG_ TcuHwTemp : 56|8@1- (1,-40) [-40|215] "C" VCU
+
+BO_ 1346 TCU_PumpStatus: 8 TCU
+ SG_ PumpState : 0|3@1+ (1,0) [0|7] "" VCU
+ SG_ PumpRunAck : 3|1@1+ (1,0) [0|1] "" VCU
+ SG_ PumpLinFault : 4|1@1+ (1,0) [0|1] "" VCU
+ SG_ PumpAltFault : 5|1@1+ (1,0) [0|1] "" VCU
+ SG_ PumpRPM : 16|16@1+ (1,0) [0|65535] "rpm" VCU
+ SG_ PumpVoltage : 32|8@1+ (0.1,0) [0|25.5] "V" VCU
+ SG_ PumpCurrentRaw : 40|8@1+ (1,0) [0|255] "" VCU
+ SG_ PumpRetryCount : 48|8@1+ (1,0) [0|255] "" VCU
+ SG_ Counter542 : 56|4@1+ (1,0) [0|15] "" VCU
+
+
+CM_ BU_ VCU "Vehicle Control Unit (Stm32-vcu / Zombieverter)";
+CM_ BU_ TCU "ZF 8HP Transmission Control Unit (in-Mechatronik replacement board)";
+CM_ BO_ 1312 "VCU -> TCU command frame, 20 ms cyclic";
+CM_ BO_ 1313 "VCU -> TCU vehicle/torque context, 100 ms cyclic";
+CM_ BO_ 1344 "TCU -> VCU primary status, 20 ms cyclic";
+CM_ BO_ 1345 "TCU -> VCU diagnostics, 100 ms cyclic";
+CM_ BO_ 1346 "TCU -> VCU aux pump status (HZ hybrid 'box only), 100 ms cyclic";
+CM_ SG_ 1312 TargetGear "Requested gear position. Manual M1..M8 = hold that gear, S = sport auto, Limp = TCU choose safe gear";
+CM_ SG_ 1312 TorqueRequest "Driver-requested torque at the wheels (signed). TCU may delay/reduce shifts based on this";
+CM_ SG_ 1312 ForceShift "If 1, request immediate shift to TargetGear ignoring smoothness logic (diagnostics)";
+CM_ SG_ 1312 Counter520 "Rolling 0..15 counter; TCU treats stale frames as VCU offline";
+CM_ SG_ 1344 CurrentGear "0=Neutral, 1..8=engaged forward gear, 9=Reverse, 14=mid-shift, 15=invalid";
+CM_ SG_ 1344 TargetGearEcho "TCU's interpretation of last received TargetGear (handshake)";
+CM_ SG_ 1344 LinePressure "Main hydraulic line pressure, 0.1 bar resolution";
+CM_ SG_ 1345 FaultBits "Bit0=SolOpen Bit1=SolShort Bit2=OilHot Bit3=PressLow Bit4=SpeedSensor Bit5=LinComm Bit6=CanStale Bit7=OverTemp Bit8..15=reserved";
+
+VAL_ 1312 TargetGear 0 "P" 1 "R" 2 "N" 3 "D" 4 "S" 5 "M1" 6 "M2" 7 "M3" 8 "M4" 9 "M5" 10 "M6" 11 "M7" 12 "M8" 13 "Limp" 15 "Invalid" ;
+VAL_ 1312 DriveMode 0 "Comfort" 1 "Sport" 2 "Eco" 3 "Snow" 4 "Manual" 5 "Launch" 15 "Reserved" ;
+VAL_ 1344 CurrentGear 0 "Neutral" 1 "G1" 2 "G2" 3 "G3" 4 "G4" 5 "G5" 6 "G6" 7 "G7" 8 "G8" 9 "Reverse" 14 "Shifting" 15 "Invalid" ;
+VAL_ 1344 TargetGearEcho 0 "P" 1 "R" 2 "N" 3 "D" 4 "S" 5 "M1" 6 "M2" 7 "M3" 8 "M4" 9 "M5" 10 "M6" 11 "M7" 12 "M8" 13 "Limp" 15 "Invalid" ;
+VAL_ 1344 TcuState 0 "Init" 1 "Idle" 2 "Park" 3 "Reverse" 4 "Neutral" 5 "Drive" 6 "Shifting" 7 "NeutralHold" 8 "Limp" 15 "Fault" ;
+VAL_ 1346 PumpState 0 "Off" 1 "Coldstart" 2 "Phase2Ready" 3 "Run" 4 "WatchdogFault" 5 "AltFault" 6 "NotPresent" 7 "Reserved" ;
+
+CM_ SG_ 1346 PumpState "TCU LIN state machine: Off / Coldstart (TX AA..0A..) / Phase2Ready (TX AA..42..) / Run (TX 55..42..) / WatchdogFault (0x32 byte0=0x40) / AltFault (0x32 byte0=0x50) / NotPresent (no LIN response after retries; non-hybrid 'box)";
+CM_ SG_ 1346 PumpRunAck "Mirrors 0x32 byte 2 == 0x55 — pump confirms it's in run mode";
+CM_ SG_ 1346 PumpLinFault "Set when 0x32 byte 0 == 0x40 (LIN watchdog / comm fault)";
+CM_ SG_ 1346 PumpAltFault "Set when 0x32 byte 0 == 0x50 (alternate fault, less common)";
+CM_ SG_ 1346 PumpRPM "Pump speed in rpm. TCU computes from 0x32 byte 3 * 32";
+CM_ SG_ 1346 PumpVoltage "Pump supply voltage. From 0x32 byte 4 * 0.1 V";
+CM_ SG_ 1346 PumpCurrentRaw "Raw 0x32 byte 5. Tracks motion but exact scaling not yet known (forum thread #7103, post 7)";
+CM_ SG_ 1346 PumpRetryCount "Number of fault->coldstart cycles since last successful Run. Saturates at 255";
