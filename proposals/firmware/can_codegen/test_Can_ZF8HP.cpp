@@ -123,6 +123,64 @@ static void TestAccelPedalIsClampedAndScaled() {
     ASSERT(round.accel_pedal == 0);
 }
 
+static void TestShiftStatusDecodeLatchesValues() {
+    Can_ZF8HP can;
+    ASSERT(!can.ShiftFrameSeen());
+
+    zf8hp_tcu_tcu_shift_status_t s = {};
+    s.shift_phase            = ZF8HP_TCU_TCU_SHIFT_STATUS_SHIFT_PHASE_OVERLAP_CHOICE;
+    s.torque_cut_request     = 1;
+    s.shift_active           = 1;
+    s.shift_fault_code       = ZF8HP_TCU_TCU_SHIFT_STATUS_SHIFT_FAULT_CODE_NONE_CHOICE;
+    s.shift_ramp_percent     = 47;
+    s.shift_elapsed_ms       = 85;
+    s.current_clutch_set     = 0b00111;
+    s.target_clutch_set      = 0b01101;
+    s.ramping_in_clutch_set  = 0b01000;
+    s.ramping_out_clutch_set = 0b00010;
+
+    uint8_t bytes[8] = {0};
+    int len = zf8hp_tcu_tcu_shift_status_pack(bytes, &s, 8);
+    ASSERT(len == 8);
+
+    bool ok = can.DecodeRx(ZF8HP_TCU_TCU_SHIFT_STATUS_FRAME_ID, bytes, 8);
+    ASSERT(ok);
+    ASSERT(can.ShiftFrameSeen());
+    ASSERT(can.ShiftPhase() == ZF8HP_TCU_TCU_SHIFT_STATUS_SHIFT_PHASE_OVERLAP_CHOICE);
+    ASSERT(can.TorqueCutRequest());
+    ASSERT(can.ShiftActive());
+    ASSERT(can.ShiftRampPercent() == 47);
+    ASSERT(can.ShiftElapsedMs() == 85);
+    ASSERT(can.CurrentClutchSet() == 0b00111);
+    ASSERT(can.TargetClutchSet() == 0b01101);
+    ASSERT(can.RampingInClutchSet() == 0b01000);
+    ASSERT(can.RampingOutClutchSet() == 0b00010);
+    ASSERT(can.ShiftDecodes() == 1);
+}
+
+static void TestTorqueCutAckRoundTripsViaVehicleInfo() {
+    Can_ZF8HP can;
+    can.SetTorqueCutAck(true);
+    can.SetActualTorque(50);
+    can.SetMotorRpm(1500);
+
+    uint8_t bytes[8] = {0};
+    uint8_t len = can.PackTx(ZF8HP_TCU_VCU_VEHICLE_INFO_FRAME_ID, bytes);
+    ASSERT(len == 8);
+
+    zf8hp_tcu_vcu_vehicle_info_t round = {};
+    int rc = zf8hp_tcu_vcu_vehicle_info_unpack(&round, bytes, 8);
+    ASSERT(rc >= 0);
+    ASSERT(round.torque_cut_ack == 1);
+    ASSERT(round.actual_torque == 50);
+    ASSERT(round.motor_rpm == 1500);
+
+    can.SetTorqueCutAck(false);
+    can.PackTx(ZF8HP_TCU_VCU_VEHICLE_INFO_FRAME_ID, bytes);
+    zf8hp_tcu_vcu_vehicle_info_unpack(&round, bytes, 8);
+    ASSERT(round.torque_cut_ack == 0);
+}
+
 static void TestCounterIncrementsOnEachPack() {
     Can_ZF8HP can;
     uint8_t bytes[8] = {0};
@@ -146,5 +204,7 @@ void Can_ZF8HPTest::RunTest() {
     TestUnknownIdIsIgnored();
     TestShortFrameIsRejected();
     TestAccelPedalIsClampedAndScaled();
+    TestShiftStatusDecodeLatchesValues();
+    TestTorqueCutAckRoundTripsViaVehicleInfo();
     TestCounterIncrementsOnEachPack();
 }

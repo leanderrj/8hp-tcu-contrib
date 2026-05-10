@@ -38,6 +38,11 @@ bool Can_ZF8HP::DecodeRx(uint32_t canId, const uint8_t bytes[8], uint8_t dlc) {
         if (rc >= 0) { ++pumpDecodes; pumpFrameSeen = true; return true; }
         break;
 
+    case ZF8HP_TCU_TCU_SHIFT_STATUS_FRAME_ID:
+        rc = zf8hp_tcu_tcu_shift_status_unpack(&latchedShift, bytes, dlc);
+        if (rc >= 0) { ++shiftDecodes; shiftFrameSeen = true; return true; }
+        break;
+
     default:
         return false; /* not one of ours */
     }
@@ -107,4 +112,8 @@ void Can_ZF8HP::SetActualTorque(int16_t nm) {
 
 void Can_ZF8HP::SetMotorRpm(int16_t rpm) {
     txVehInfo.motor_rpm = rpm;
+}
+
+void Can_ZF8HP::SetTorqueCutAck(bool ack) {
+    txVehInfo.torque_cut_ack = ack ? 1 : 0;
 }

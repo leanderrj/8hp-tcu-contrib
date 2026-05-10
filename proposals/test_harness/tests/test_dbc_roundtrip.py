@@ -18,8 +18,48 @@ def db(dbc_path):
 
 
 def test_loads_with_expected_message_count(db):
-    assert len(db.messages) == 5, [m.name for m in db.messages]
-    assert {m.frame_id for m in db.messages} == {0x520, 0x521, 0x540, 0x541, 0x542}
+    assert len(db.messages) == 6, [m.name for m in db.messages]
+    assert {m.frame_id for m in db.messages} == {0x520, 0x521, 0x540, 0x541, 0x542, 0x543}
+
+
+def test_torque_handshake_signals_present(db):
+    """The shift handshake protocol added in commit (torque_handshake)."""
+    shift = db.get_message_by_name("TCU_ShiftStatus")
+    assert {"ShiftPhase", "TorqueCutRequest", "ShiftActive",
+            "ShiftFaultCode", "ShiftRampPercent", "ShiftElapsedMs",
+            "CurrentClutchSet", "TargetClutchSet",
+            "RampingInClutchSet", "RampingOutClutchSet"} <= {s.name for s in shift.signals}
+    veh = db.get_message_by_name("VCU_VehicleInfo")
+    assert "TorqueCutAck" in {s.name for s in veh.signals}
+
+
+def test_shift_status_roundtrip(db):
+    """End-to-end: encode the protocol equivalent of an Overlap-phase shift,
+    decode, verify every signal."""
+    msg = db.get_message_by_name("TCU_ShiftStatus")
+    sample = {
+        "ShiftPhase":         "Overlap",
+        "TorqueCutRequest":    1,
+        "ShiftActive":         1,
+        "ShiftFaultCode":     "None",
+        "ShiftRampPercent":    47,
+        "ShiftElapsedMs":      85,
+        "CurrentClutchSet":    0b00111,   # A|B|C
+        "TargetClutchSet":     0b01101,   # A|C|D (single-element shift)
+        "RampingInClutchSet":  0b01000,
+        "RampingOutClutchSet": 0b00010,
+    }
+    decoded = msg.decode(msg.encode(sample))
+    assert str(decoded["ShiftPhase"]) == "Overlap"
+    assert decoded["TorqueCutRequest"] == 1
+    assert decoded["ShiftActive"] == 1
+    assert str(decoded["ShiftFaultCode"]) == "None"
+    assert decoded["ShiftRampPercent"] == 47
+    assert decoded["ShiftElapsedMs"] == 85
+    assert decoded["CurrentClutchSet"] == 0b00111
+    assert decoded["TargetClutchSet"] == 0b01101
+    assert decoded["RampingInClutchSet"] == 0b01000
+    assert decoded["RampingOutClutchSet"] == 0b00010
 
 
 def test_vcu_gear_request_roundtrip(db):

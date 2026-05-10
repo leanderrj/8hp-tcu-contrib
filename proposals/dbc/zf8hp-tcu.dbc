@@ -41,6 +41,8 @@ VAL_TABLE_ DriveMode 0 "Comfort" 1 "Sport" 2 "Eco" 3 "Snow" 4 "Manual" 5 "Launch
 VAL_TABLE_ TcuState 0 "Init" 1 "Idle" 2 "Park" 3 "Reverse" 4 "Neutral" 5 "Drive" 6 "Shifting" 7 "NeutralHold" 8 "Limp" 15 "Fault" ;
 VAL_TABLE_ PumpState 0 "Off" 1 "Coldstart" 2 "Phase2Ready" 3 "Run" 4 "WatchdogFault" 5 "AltFault" 6 "NotPresent" 7 "Reserved" ;
 VAL_TABLE_ CurrentGear 0 "Neutral" 1 "G1" 2 "G2" 3 "G3" 4 "G4" 5 "G5" 6 "G6" 7 "G7" 8 "G8" 9 "Reverse" 14 "Shifting" 15 "Invalid" ;
+VAL_TABLE_ ShiftPhase 0 "Idle" 1 "PreFill" 2 "TorqueCut" 3 "Overlap" 4 "Complete" 5 "Limp" ;
+VAL_TABLE_ ShiftFault 0 "None" 1 "InvalidTargetGear" 2 "TorqueCutTimeout" 3 "OverlapTimeout" 4 "ClutchTableInconsistent" ;
 
 
 BO_ 1312 VCU_GearRequest: 8 VCU
@@ -63,6 +65,7 @@ BO_ 1313 VCU_VehicleInfo: 8 VCU
  SG_ ChargingActive : 48|1@1+ (1,0) [0|1] "" TCU
  SG_ RegenAllowed : 49|1@1+ (1,0) [0|1] "" TCU
  SG_ HVPresent : 50|1@1+ (1,0) [0|1] "" TCU
+ SG_ TorqueCutAck : 51|1@1+ (1,0) [0|1] "" TCU
  SG_ Counter521 : 56|4@1+ (1,0) [0|15] "" TCU
 
 
@@ -85,6 +88,18 @@ BO_ 1345 TCU_Status2: 8 TCU
  SG_ FaultBits : 32|16@1+ (1,0) [0|65535] "" VCU
  SG_ ShiftCount : 48|8@1+ (1,0) [0|255] "" VCU
  SG_ TcuHwTemp : 56|8@1- (1,-40) [-40|215] "C" VCU
+
+BO_ 1347 TCU_ShiftStatus: 8 TCU
+ SG_ ShiftPhase : 0|3@1+ (1,0) [0|7] "" VCU
+ SG_ TorqueCutRequest : 3|1@1+ (1,0) [0|1] "" VCU
+ SG_ ShiftActive : 4|1@1+ (1,0) [0|1] "" VCU
+ SG_ ShiftFaultCode : 5|3@1+ (1,0) [0|7] "" VCU
+ SG_ ShiftRampPercent : 8|8@1+ (1,0) [0|100] "%" VCU
+ SG_ ShiftElapsedMs : 16|16@1+ (1,0) [0|65535] "ms" VCU
+ SG_ CurrentClutchSet : 32|5@1+ (1,0) [0|31] "" VCU
+ SG_ TargetClutchSet : 40|5@1+ (1,0) [0|31] "" VCU
+ SG_ RampingInClutchSet : 48|5@1+ (1,0) [0|31] "" VCU
+ SG_ RampingOutClutchSet : 56|5@1+ (1,0) [0|31] "" VCU
 
 BO_ 1346 TCU_PumpStatus: 8 TCU
  SG_ PumpState : 0|3@1+ (1,0) [0|7] "" VCU
@@ -120,6 +135,15 @@ VAL_ 1344 CurrentGear 0 "Neutral" 1 "G1" 2 "G2" 3 "G3" 4 "G4" 5 "G5" 6 "G6" 7 "G
 VAL_ 1344 TargetGearEcho 0 "P" 1 "R" 2 "N" 3 "D" 4 "S" 5 "M1" 6 "M2" 7 "M3" 8 "M4" 9 "M5" 10 "M6" 11 "M7" 12 "M8" 13 "Limp" 15 "Invalid" ;
 VAL_ 1344 TcuState 0 "Init" 1 "Idle" 2 "Park" 3 "Reverse" 4 "Neutral" 5 "Drive" 6 "Shifting" 7 "NeutralHold" 8 "Limp" 15 "Fault" ;
 VAL_ 1346 PumpState 0 "Off" 1 "Coldstart" 2 "Phase2Ready" 3 "Run" 4 "WatchdogFault" 5 "AltFault" 6 "NotPresent" 7 "Reserved" ;
+VAL_ 1347 ShiftPhase 0 "Idle" 1 "PreFill" 2 "TorqueCut" 3 "Overlap" 4 "Complete" 5 "Limp" ;
+VAL_ 1347 ShiftFaultCode 0 "None" 1 "InvalidTargetGear" 2 "TorqueCutTimeout" 3 "OverlapTimeout" 4 "ClutchTableInconsistent" ;
+
+CM_ BO_ 1347 "TCU -> VCU shift handshake, 20 ms cyclic. The torque-cut handshake choreography is: TCU asserts TorqueCutRequest entering TorqueCut phase. VCU pulls engine/motor torque to ~zero, then asserts TorqueCutAck in VCU_VehicleInfo. TCU sees ack, transitions to Overlap phase (clutch swap). When the new clutch is fully engaged TCU clears TorqueCutRequest. VCU sees it cleared and ramps torque back up.";
+CM_ SG_ 1347 ShiftPhase "Phase of the active shift; matches zf8hp::ShiftPhase in shift_logic.h";
+CM_ SG_ 1347 TorqueCutRequest "TCU is asking VCU to pull torque. Held for the duration of the TorqueCut+Overlap phases of a shift.";
+CM_ SG_ 1347 ShiftElapsedMs "Time spent in current ShiftPhase, useful for telemetry and shift-quality post-mortem.";
+CM_ SG_ 1347 CurrentClutchSet "Bitmask, bit 0 = element A engaged, ..., bit 4 = element E engaged.";
+CM_ SG_ 1313 TorqueCutAck "VCU acknowledges that engine/motor torque is at the requested cut level. Mirrors TCU_ShiftStatus.TorqueCutRequest with one frame of latency.";
 
 CM_ SG_ 1346 PumpState "TCU LIN state machine: Off / Coldstart (TX AA..0A..) / Phase2Ready (TX AA..42..) / Run (TX 55..42..) / WatchdogFault (0x32 byte0=0x40) / AltFault (0x32 byte0=0x50) / NotPresent (no LIN response after retries; non-hybrid 'box)";
 CM_ SG_ 1346 PumpRunAck "Mirrors 0x32 byte 2 == 0x55 — pump confirms it's in run mode";

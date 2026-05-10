@@ -46,6 +46,7 @@ public:
     void SetVcuReady(bool r);
     void SetActualTorque(int16_t nm);
     void SetMotorRpm(int16_t rpm);
+    void SetTorqueCutAck(bool ack);
 
     /* Latched view of the most recent TCU status frames, scaled to
      * physical units. Stays at last-known-good if the TCU stops sending. */
@@ -64,22 +65,39 @@ public:
     float    PumpVoltage()      const { return latchedPump.pump_voltage * 0.1f; }
     bool     PumpFrameSeen()    const { return pumpFrameSeen; }
 
+    /* TCU shift handshake (TCU_ShiftStatus, 0x543). */
+    uint8_t  ShiftPhase()         const { return latchedShift.shift_phase; }
+    bool     TorqueCutRequest()   const { return latchedShift.torque_cut_request; }
+    bool     ShiftActive()        const { return latchedShift.shift_active; }
+    uint8_t  ShiftFaultCode()     const { return latchedShift.shift_fault_code; }
+    uint8_t  ShiftRampPercent()   const { return latchedShift.shift_ramp_percent; }
+    uint16_t ShiftElapsedMs()     const { return latchedShift.shift_elapsed_ms; }
+    uint8_t  CurrentClutchSet()   const { return latchedShift.current_clutch_set; }
+    uint8_t  TargetClutchSet()    const { return latchedShift.target_clutch_set; }
+    uint8_t  RampingInClutchSet() const { return latchedShift.ramping_in_clutch_set; }
+    uint8_t  RampingOutClutchSet() const { return latchedShift.ramping_out_clutch_set; }
+    bool     ShiftFrameSeen()     const { return shiftFrameSeen; }
+
     /* Per-frame counter / decode statistics — exposable as VCU params. */
     uint16_t Status1Decodes()   const { return s1Decodes; }
     uint16_t Status2Decodes()   const { return s2Decodes; }
+    uint16_t ShiftDecodes()     const { return shiftDecodes; }
     uint16_t PumpDecodes()      const { return pumpDecodes; }
     uint16_t DecodeErrors()     const { return decodeErrors; }
 
 private:
     zf8hp_tcu_tcu_status1_t      latchedStatus1{};
     zf8hp_tcu_tcu_status2_t      latchedStatus2{};
+    zf8hp_tcu_tcu_shift_status_t latchedShift{};
     zf8hp_tcu_tcu_pump_status_t  latchedPump{};
     zf8hp_tcu_vcu_gear_request_t txGearReq{};
     zf8hp_tcu_vcu_vehicle_info_t txVehInfo{};
 
     bool     pumpFrameSeen   = false;
+    bool     shiftFrameSeen  = false;
     uint16_t s1Decodes       = 0;
     uint16_t s2Decodes       = 0;
+    uint16_t shiftDecodes    = 0;
     uint16_t pumpDecodes     = 0;
     uint16_t decodeErrors    = 0;
     uint8_t  cnt520          = 0;
