@@ -1,0 +1,36 @@
+ref,value,part_number,package,kicad_lib,datasheet_path,description
+# Component bill-of-materials for the OI 8HP TCU schematic.
+# Every reference designator that appears in nets.csv must also appear here.
+# `datasheet_path` either points at the local archive copy or a URL.
+J1,BMW_8HP_TCM_49pin,—,Tyco/Molex (TBD),OEM_8HP:BMW_8HP_TCM_49pin,archive/forum/TCM_Pinout.pdf,ZF G8P75HZ Mechatronik internal connector — see proposals/hardware/oem_interface
+U1,STM32F103C8T6,STM32F103C8T6,LQFP-48,MCU_ST_STM32F1:STM32F103C8Tx,https://www.st.com/resource/en/datasheet/stm32f103c8.pdf,Cortex-M3 64KB flash 20KB RAM with bxCAN/SPI/USART
+U2,MAX22200_chip0,MAX22200ATJ+T,TQFN-32,Driver_Motor:MAX22200ATJ,archive/references/MAX22200_datasheet.pdf,Octal solenoid driver — chip 0 (clutches A/B/C/D/E + TCC + Line Pressure + spare)
+U3,MAX22200_chip1,MAX22200ATJ+T,TQFN-32,Driver_Motor:MAX22200ATJ,archive/references/MAX22200_datasheet.pdf,Octal solenoid driver — chip 1 (Park Hold + Park Release + 6 spares)
+U4,TJA1043T,TJA1043T/1Z,SO-14,Interface_CAN_LIN:TJA1043T,https://www.nxp.com/docs/en/data-sheet/TJA1043.pdf,High-speed CAN transceiver with sleep/wake on CAN
+U5,TJA1027T,TJA1027T/3,SO-8,Interface_CAN_LIN:TJA1027T,https://www.nxp.com/docs/en/data-sheet/TJA1027.pdf,LIN 2.x transceiver for the aux pump (HZ hybrid 'box only)
+U6,AP63203,AP63203WU-7,SOT-26,Regulator_Switching:AP63203WU-7,https://www.diodes.com/datasheet/download/AP63200-AP63201-AP63203-AP63205.pdf,3.8V-32V to 5V/2A buck regulator (12V VBAT input)
+U7,AP2112K-3.3,AP2112K-3.3TRG1,SOT-23-5,Regulator_Linear:AP2112K-3.3,https://www.diodes.com/datasheet/download/AP2112.pdf,5V to 3.3V LDO for STM32 logic supply
+Y1,8MHz,ABM3B-8.000MHZ-B2T,SMD-3.2x2.5,Crystal:Crystal_SMD_3225-4Pin_3.2x2.5mm,—,HSE oscillator for STM32F103
+J2,SWD_Header,—,Header 1x4 0.05",Connector_Generic:Conn_01x04,—,SWD programming/debug header (VDD GND SWDIO SWCLK)
+J3,Debug_UART,—,Header 1x4 0.1",Connector_Generic:Conn_01x04,—,USART3 debug header (TX RX 3V3 GND)
+LED1,STATUS,LED 0805 green,LED 0805,LED:LED_0805_2012Metric,—,Status LED on PC13
+SW1,RESET,—,SMD button 6x6,Switch_SMD:SW_SPST_PTS810,—,STM32 NRST button
+F1,POLY_500mA,—,1206,Fuse_PolyFuse,—,Resettable fuse on 5V supply to TCM pin 15
+TVS1,SMAJ40CA,SMAJ40CA,SMA,Diode_TVS:SMAJ40CA,—,VBAT bidirectional TVS clamp at 40V
+GDA1,Gas_Discharge,—,SMD,Diode:GDT,—,Gas discharge arrestor on VBAT (per ZombieVerter V1.2 design)
+D_FB_5,SS24,SS24,SMA,Diode_Schottky:SS24,—,Flyback diode on Park Hold solenoid output
+D_FB_41,SS24,SS24,SMA,Diode_Schottky:SS24,—,Flyback diode on Clutch A
+D_FB_42,SS24,SS24,SMA,Diode_Schottky:SS24,—,Flyback diode on Clutch D
+D_FB_43,SS24,SS24,SMA,Diode_Schottky:SS24,—,Flyback diode on Clutch B
+D_FB_44,SS24,SS24,SMA,Diode_Schottky:SS24,—,Flyback diode on Clutch E
+D_FB_45,SS24,SS24,SMA,Diode_Schottky:SS24,—,Flyback diode on Clutch C
+D_FB_46,SS24,SS24,SMA,Diode_Schottky:SS24,—,Flyback diode on TCC
+D_FB_47,SS24,SS24,SMA,Diode_Schottky:SS24,—,Flyback diode on Line Pressure
+D_FB_48,SS24,SS24,SMA,Diode_Schottky:SS24,—,Flyback diode on Park Release
+R_NTC1,NTC_pullup,10k 1%,0805,Resistor_SMD:R_0805_2012Metric,—,Pull-up reference for oil temp NTC divider
+R_LED1,LED_series,1k 5%,0603,Resistor_SMD:R_0603_1608Metric,—,LED1 current-limit
+C_VBAT_BULK,Cap_Bulk,100uF 50V,SMD electrolytic 8x10,Capacitor_THT:CP_Radial_D8.0mm_P3.50mm,—,VBAT bulk decoupling
+C_5V_OUT,Cap_5V,22uF 16V,1206,Capacitor_SMD:C_1206_3216Metric,—,Output cap on AP63203
+C_3V3_OUT,Cap_3V3,1uF 10V,0603,Capacitor_SMD:C_0603_1608Metric,—,Output cap on AP2112
+C_HSE1,Cap_HSE,18pF 50V,0402,Capacitor_SMD:C_0402_1005Metric,—,HSE crystal load cap A
+C_HSE2,Cap_HSE,18pF 50V,0402,Capacitor_SMD:C_0402_1005Metric,—,HSE crystal load cap B

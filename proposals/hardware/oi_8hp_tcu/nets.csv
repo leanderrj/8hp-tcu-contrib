@@ -1,0 +1,231 @@
+net,component,pin,note
+# Net list for the OI 8HP TCU schematic. One row = one net node
+# (component-pin pair). The same net name on multiple rows means those
+# pins are connected together.
+#
+# Sources: TCM_Pinout.pdf (J1 pins), MAX22200_datasheet.pdf (U2/U3 pins),
+# STM32F103C8T6 datasheet (U1 pins), proposals/firmware/solenoid_driver/
+# (channel allocation).
+#
+# Pin numbers for U2/U3 (MAX22200) follow the canonical-channel order
+# OUT0..OUT7 — verify against archive/references/MAX22200_datasheet.pdf
+# Section "Pin Configuration" before sending to a fab.
+#
+# Firmware cross-references in proposals/firmware/solenoid_driver/solenoids.h:
+#   chip 0 channel 0 = ClutchA = TCM pin 41
+#   chip 0 channel 1 = ClutchB = TCM pin 43
+#   chip 0 channel 2 = ClutchC = TCM pin 45
+#   chip 0 channel 3 = ClutchD = TCM pin 42
+#   chip 0 channel 4 = ClutchE = TCM pin 44
+#   chip 0 channel 5 = TCC = TCM pin 46
+#   chip 0 channel 6 = LinePressure = TCM pin 47
+#   chip 0 channel 7 = (spare)
+#   chip 1 channel 0 = ParkHold = TCM pin 5
+#   chip 1 channel 1 = ParkRelease = TCM pin 48
+#   chip 1 channels 2-7 = (spare)
+#
+# ===== POWER =====
+VBAT,J1,23,T30 +12V from harness (TCM pin 23)
+VBAT,J1,22,T30 +12V paralleled (TCM pin 22)
+VBAT,U2,VBAT,MAX22200 chip 0 motor supply
+VBAT,U3,VBAT,MAX22200 chip 1 motor supply
+VBAT,U6,VIN,AP63203 input
+VBAT,C_VBAT_BULK,1,bulk decoupling
+VBAT,TVS1,1,VBAT clamp anode
+VBAT,GDA1,1,gas discharge arrestor
+VBAT_SOL,J1,37,solenoid bank +12V
+VBAT_SOL,J1,38,solenoid bank +12V (paralleled)
+VBAT_SOL,J1,39,solenoid bank +12V (paralleled)
+VBAT_SOL,J1,40,solenoid bank +12V (paralleled)
+VBAT_SOL,—,—,joined to VBAT at star point through bulk capacitor + ferrite (commented note; not a connection)
+GND,J1,24,T31 chassis ground (TCM pin 24)
+GND,J1,25,T31 ground paralleled (TCM pin 25)
+GND,J1,12,park-position sense common ground
+GND,U1,VSS_1,STM32 digital ground 1
+GND,U1,VSS_2,STM32 digital ground 2
+GND,U1,VSS_3,STM32 digital ground 3
+GND,U1,VSSA,STM32 analog ground
+GND,U2,GND,MAX22200 chip 0 ground (exposed pad)
+GND,U3,GND,MAX22200 chip 1 ground (exposed pad)
+GND,U4,GND,TJA1043 ground
+GND,U5,GND,TJA1027 ground
+GND,U6,GND,AP63203 ground
+GND,U7,GND,AP2112 ground
+GND,C_VBAT_BULK,2,bulk decoupling return
+GND,C_5V_OUT,2,buck output cap return
+GND,C_3V3_OUT,2,LDO output cap return
+GND,TVS1,2,TVS cathode
+GND,GDA1,2,gas discharge arrestor return
+GND,LED1,2,LED cathode
++5V,U6,VOUT,AP63203 buck output (5V/2A)
++5V,U7,VIN,AP2112 input
++5V,U2,VDD,MAX22200 chip 0 logic supply
++5V,U3,VDD,MAX22200 chip 1 logic supply
++5V,U4,VBAT_PIN,TJA1043 supply (note: TJA1043 has VIO + VBAT; the standard variant uses 5V on the digital side)
++5V,U5,VSUP,TJA1027 supply
++5V,F1,1,fuse to sensor excitation
++5V,C_5V_OUT,1,buck output cap
+SENSE_5V,F1,2,polyfuse output
+SENSE_5V,J1,15,5V excitation to shaft speed sensors (TCM pin 15)
++3V3,U7,VOUT,AP2112 LDO output (3.3V/600mA)
++3V3,U1,VBAT,STM32 backup domain
++3V3,U1,VDDA,STM32 analog supply
++3V3,U1,VDD_1,STM32 digital supply
++3V3,U1,VDD_2,STM32 digital supply
++3V3,U1,VDD_3,STM32 digital supply
++3V3,U4,VIO,TJA1043 IO supply (3.3V to STM32)
++3V3,U5,VIO,TJA1027 IO supply
++3V3,J2,1,SWD VDD
++3V3,J3,3,debug UART VDD
++3V3,C_3V3_OUT,1,LDO output cap
++3V3,R_NTC1,1,NTC pull-up reference
+# ===== STM32 BASIC SUPPORT =====
+NRST,U1,NRST,reset signal
+NRST,SW1,1,reset button
+NRST,J2,4,SWD reset (optional)
+HSE_IN,U1,OSC_IN,8MHz crystal
+HSE_IN,Y1,1,crystal terminal A
+HSE_IN,C_HSE1,1,load cap A
+HSE_OUT,U1,OSC_OUT,8MHz crystal
+HSE_OUT,Y1,3,crystal terminal B
+HSE_OUT,C_HSE2,1,load cap B
+GND,Y1,2,crystal case
+GND,Y1,4,crystal case
+GND,C_HSE1,2,
+GND,C_HSE2,2,
+BOOT0,U1,BOOT0,boot mode select — pulled to GND for boot from flash
+GND,U1,BOOT0,via pulldown — direct connection on production board
+# ===== CAN BUS (PT-CAN1 to VCU) =====
+CAN_TX,U1,PA12,STM32 CAN1 TX
+CAN_TX,U4,TXD,TJA1043 input
+CAN_RX,U1,PA11,STM32 CAN1 RX
+CAN_RX,U4,RXD,TJA1043 output
+CAN_H,U4,CANH,TJA1043 dominant high
+CAN_H,J1,31,TCM pin 31 → external pin 5 (PT-CAN 1 HIGH)
+CAN_L,U4,CANL,TJA1043 dominant low
+CAN_L,J1,30,TCM pin 30 → external pin 6 (PT-CAN 1 LOW)
+CAN_STBN,U1,PA15,STM32 GPIO controlling TJA1043 STBN (moved off PA8 — that's TIM1 CH1 for input shaft RPM)
+CAN_STBN,U4,STBN,TJA1043 standby
+CAN_EN,U1,PB6,STM32 GPIO controlling TJA1043 EN (moved off PA9 — TIM1 CH2 for output shaft RPM)
+CAN_EN,U4,EN,TJA1043 enable
+CAN_INH,U1,PB7,TJA1043 INH wake-up signal back to STM32 (EXTI-capable for wake from sleep)
+CAN_INH,U4,INH,TJA1043 inhibit / wake-out
+# ===== LIN BUS (to aux pump on TCM pin 2; HZ hybrid only) =====
+LIN_TX,U1,PA2,STM32 USART2 TX
+LIN_TX,U5,TXD,TJA1027 input
+LIN_RX,U1,PA3,STM32 USART2 RX
+LIN_RX,U5,RXD,TJA1027 output
+LIN_BUS,U5,LIN,TJA1027 LIN single-wire output
+LIN_BUS,J1,2,TCM pin 2 → aux 12V oil pump (LIN 2.x at 19200 baud)
+LIN_SLP,U1,PB12,STM32 GPIO controlling TJA1027 SLP_N (sleep when not in HZ variant)
+LIN_SLP,U5,SLP_N,—
+# ===== SPI to MAX22200 daisy chain =====
+SPI_SCK,U1,PA5,STM32 SPI1 SCK
+SPI_SCK,U2,SCK,SPI clock
+SPI_SCK,U3,SCK,SPI clock
+SPI_MOSI,U1,PA7,STM32 SPI1 MOSI to first chip's input
+SPI_MOSI,U2,SDI,—
+SPI_MISO,U1,PA6,STM32 SPI1 MISO from last chip's output
+SPI_MISO,U3,SDO,—
+SPI_CS,U1,PA4,STM32 SPI1 NSS / chip-select (single CS for daisy chain)
+SPI_CS,U2,CS,—
+SPI_CS,U3,CS,—
+SPI_DAISY,U2,SDO,chip 0 output → chip 1 input (the daisy link)
+SPI_DAISY,U3,SDI,—
+MAX_FAULT,U1,PB1,STM32 input (open-drain fault from either chip — wired-OR)
+MAX_FAULT,U2,FAULT_N,—
+MAX_FAULT,U3,FAULT_N,—
+# ===== Solenoid outputs (chip 0) =====
+SOL_CLUTCH_A,U2,OUT0,chip 0 channel 0 → ClutchA per solenoids.h
+SOL_CLUTCH_A,J1,41,TCM pin 41
+SOL_CLUTCH_A,D_FB_41,2,flyback cathode
+VBAT_SOL,D_FB_41,1,flyback anode
+SOL_CLUTCH_B,U2,OUT1,chip 0 channel 1 → ClutchB
+SOL_CLUTCH_B,J1,43,TCM pin 43
+SOL_CLUTCH_B,D_FB_43,2,
+VBAT_SOL,D_FB_43,1,
+SOL_CLUTCH_C,U2,OUT2,chip 0 channel 2 → ClutchC
+SOL_CLUTCH_C,J1,45,TCM pin 45
+SOL_CLUTCH_C,D_FB_45,2,
+VBAT_SOL,D_FB_45,1,
+SOL_CLUTCH_D,U2,OUT3,chip 0 channel 3 → ClutchD
+SOL_CLUTCH_D,J1,42,TCM pin 42
+SOL_CLUTCH_D,D_FB_42,2,
+VBAT_SOL,D_FB_42,1,
+SOL_CLUTCH_E,U2,OUT4,chip 0 channel 4 → ClutchE
+SOL_CLUTCH_E,J1,44,TCM pin 44
+SOL_CLUTCH_E,D_FB_44,2,
+VBAT_SOL,D_FB_44,1,
+SOL_TCC,U2,OUT5,chip 0 channel 5 → TCC
+SOL_TCC,J1,46,TCM pin 46
+SOL_TCC,D_FB_46,2,
+VBAT_SOL,D_FB_46,1,
+SOL_LINE_PRESSURE,U2,OUT6,chip 0 channel 6 → LinePressure
+SOL_LINE_PRESSURE,J1,47,TCM pin 47
+SOL_LINE_PRESSURE,D_FB_47,2,
+VBAT_SOL,D_FB_47,1,
+# chip 0 channel 7 left as a spare per SOLENOID_BINDING.md option A
+# ===== Solenoid outputs (chip 1) =====
+SOL_PARK_HOLD,U3,OUT0,chip 1 channel 0 → ParkHold
+SOL_PARK_HOLD,J1,5,TCM pin 5
+SOL_PARK_HOLD,D_FB_5,2,
+VBAT_SOL,D_FB_5,1,
+SOL_PARK_RELEASE,U3,OUT1,chip 1 channel 1 → ParkRelease
+SOL_PARK_RELEASE,J1,48,TCM pin 48
+SOL_PARK_RELEASE,D_FB_48,2,
+VBAT_SOL,D_FB_48,1,
+# chip 1 channels 2-7 left spare for future variants / paralleled-channel mode
+# ===== Sensors =====
+PARK_POS_1,J1,13,park-pos switch contact 1
+PARK_POS_1,U1,PB13,STM32 GPIO with internal pull-up (sense)
+PARK_POS_2,J1,14,park-pos switch contact 2
+PARK_POS_2,U1,PB14,STM32 GPIO with internal pull-up (sense)
+INPUT_SHAFT_RPM,J1,16,input (turbine) shaft VR sensor
+INPUT_SHAFT_RPM,U1,PA8,TIM1 CH1 capture
+OUTPUT_SHAFT_RPM,J1,17,output shaft VR sensor
+OUTPUT_SHAFT_RPM,U1,PA9,TIM1 CH2 capture
+OIL_TEMP_NTC,J1,6,thermistor terminal A
+OIL_TEMP_NTC,J1,7,thermistor terminal B (note: NTC is differential; this design ties one side to GND through the harness)
+OIL_TEMP_NTC,U1,PA0,STM32 ADC1_IN0
+OIL_TEMP_NTC,R_NTC1,2,NTC divider top
+T15_WAKE,J1,26,T15 wake from harness
+T15_WAKE,U1,PB8,STM32 GPIO (EXTI-capable; moved off PB10 — that's USART3 TX for debug)
+# ===== Status & debug =====
+LED_STATUS,U1,PC13,STM32 GPIO active-low status LED
+LED_STATUS,R_LED1,1,LED current-limit
+LED_STATUS,LED1,1,LED anode
+DEBUG_TX,U1,PB10,USART3 TX
+DEBUG_TX,J3,1,debug UART TX header pin
+DEBUG_RX,U1,PB11,USART3 RX
+DEBUG_RX,J3,2,debug UART RX header pin
+SWDIO,U1,PA13,SWDIO (debug)
+SWDIO,J2,2,SWD header
+SWCLK,U1,PA14,SWCLK (debug)
+SWCLK,J2,3,SWD header
+GND,J2,—,SWD header GND wire (place on header pin layout when symbol is added)
+# ===== Passthrough — external connector pins not used by this design =====
+# The OEM external connector has 16 pins. We use 5 of them (T30+12V, T31 GND,
+# T15 wake, PT-CAN1 H/L). The other 11 (incl. PT-CAN2 and 9 unlabeled) pass
+# through unused on this design but the J1 connector body still presents
+# them. Listed here as no-connect anchors so the netlist's J1 footprint
+# accounts for every pin.
+NC_TCM_1,J1,1,no connect
+NC_TCM_3,J1,3,no connect
+NC_TCM_4,J1,4,no connect
+NC_TCM_8,J1,8,no connect
+NC_TCM_9,J1,9,no connect
+NC_TCM_10,J1,10,no connect
+NC_TCM_11,J1,11,no connect
+NC_TCM_18,J1,18,no connect
+NC_TCM_19,J1,19,passthrough EXT11 (unused this design)
+NC_TCM_20,J1,20,passthrough EXT15
+NC_TCM_21,J1,21,passthrough EXT16
+NC_TCM_27,J1,27,passthrough EXT7
+NC_TCM_28,J1,28,passthrough EXT12
+NC_TCM_29,J1,29,passthrough EXT2
+NC_TCM_32,J1,32,passthrough EXT1
+NC_TCM_33,J1,33,passthrough PT-CAN2 HIGH (unused — VCU on PT-CAN1)
+NC_TCM_34,J1,34,passthrough PT-CAN2 LOW
+NC_TCM_35,J1,35,passthrough EXT8
+NC_TCM_36,J1,36,passthrough EXT10
+NC_TCM_49,J1,49,no connect
