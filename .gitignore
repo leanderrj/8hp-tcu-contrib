@@ -3,6 +3,9 @@ repo/
 
 # Local build / venv artifacts
 venv/
+.venv/
+__pycache__/
+*.pyc
 *.o
 *.a
 test_vcu
