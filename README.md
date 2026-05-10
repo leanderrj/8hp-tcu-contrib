@@ -13,16 +13,10 @@ shape.
 ## Upstream relationship
 
 ```
-                          tracks via submodule
-                    ┌──────────────────────────────────┐
-                    ▼                                  │
-leanderrj/8hp-tcu-contrib (standalone)              upstream
-                    │                                  ▲
-                    │ pinned at upstream/8HP-TCU       │
-                    │ pinned at upstream/Stm32-vcu     │
-                    │                                  │
-                    │ separate work-area forks for PRs:│
-                    ▼                                  │
+leanderrj/8hp-tcu-contrib  (standalone)
+                    │
+                    │ separate work-area forks for PRs:
+                    ▼
 leanderrj/8HP-TCU   (fork) ─────PR──▶ damienmaguire/8HP-TCU
 leanderrj/Stm32-vcu (fork) ─────PR──▶ damienmaguire/Stm32-vcu
 ```
@@ -32,8 +26,7 @@ leanderrj/Stm32-vcu (fork) ─────PR──▶ damienmaguire/Stm32-vcu
 | `leanderrj/8hp-tcu-contrib` | research + analysis + reference |
 | `leanderrj/Stm32-vcu` | PR-staging fork |
 | `leanderrj/8HP-TCU` | PR-staging fork |
-| `upstream/8HP-TCU/` (submodule) | pinned upstream of `damienmaguire/8HP-TCU` |
-| `upstream/Stm32-vcu/` (submodule) | pinned upstream of `damienmaguire/Stm32-vcu` |
+| `repo/` *(gitignored)* | local clones of upstreams as scratch workspace |
 
 ## Layout
 
@@ -71,9 +64,6 @@ proposals/
     stm32_vcu_ix4_lever/    PR draft for damienmaguire/Stm32-vcu
     8hp_tcu_software_skeleton/  PR draft for damienmaguire/8HP-TCU
   forum_reply_6047.md       drafted reply for the openinverter master thread
-upstream/
-  8HP-TCU/                  submodule pinned to damienmaguire/8HP-TCU
-  Stm32-vcu/                submodule pinned to damienmaguire/Stm32-vcu
 ```
 
 ## Tests
@@ -99,8 +89,8 @@ toolchain required for any of them.
 | pytest — schematic netlist | `proposals/test_harness/tests/test_oi_8hp_tcu_schematic.py` | 24 |
 
 C++ tests build against unmodified `damienmaguire/Stm32-vcu` master
-via the `upstream/Stm32-vcu` submodule. pytest runs from
-`proposals/test_harness/` after `pip install -e .`.
+(clone separately into `repo/` or your preferred workspace). pytest
+runs from `proposals/test_harness/` after `pip install -e .`.
 
 ## PR drafts
 
@@ -127,8 +117,8 @@ to open the corresponding PR.
 ## Reproducing
 
 ```bash
-# Clone with submodules
-git clone --recurse-submodules https://github.com/leanderrj/8hp-tcu-contrib.git
+# Clone
+git clone https://github.com/leanderrj/8hp-tcu-contrib.git
 cd 8hp-tcu-contrib
 
 # Re-derive the BMW G26 0x3F9 CRC parameters from the captures
@@ -147,8 +137,8 @@ cd proposals/test_harness && pip install -e . && pytest
 
 # Run the C++ host tests against upstream Stm32-vcu master
 # (procedure documented in proposals/firmware/*/INTEGRATION.md)
-cd ../../upstream/Stm32-vcu
-git submodule update --init --depth 1   # pulls libopeninv
+git clone https://github.com/damienmaguire/Stm32-vcu.git /tmp/Stm32-vcu
+cd /tmp/Stm32-vcu && git submodule update --init --depth 1
 # Apply patches from each INTEGRATION.md, then:
 make Test && ./test/test_vcu
 # → All tests passed
