@@ -14,7 +14,7 @@ has the URL, the page hash if from a static source, and an explicit
 
 ## MAX22200 datasheet
 
-**File:** `MAX22200_datasheet.pdf` *(not yet downloaded — see below)*
+**File:** `MAX22200_datasheet.pdf` *(46 pages, 652 KB; SHA in SHA256SUMS)*
 **Canonical URL:** https://www.analog.com/media/en/technical-documentation/data-sheets/MAX22200.pdf
 **Vendor page:** https://www.analog.com/en/products/max22200.html
 **Cited in:** `proposals/tcm_max22200_binding/SOLENOID_BINDING.md`,
