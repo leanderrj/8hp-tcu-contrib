@@ -37,16 +37,6 @@ xorout. Notable: `0x3FD` xorout `0x70` over bytes [1..4] matches what
 `F30_Lever::sendcan` already emits — so F30 TX format is unchanged on
 G26. Catalog is in the repo for whoever else hits this.
 
-**Solenoid count on the new TCU.**
-Pulled the pins out of `TCM_Pinout.pdf`. Counted A/B/C/D/E + TCC +
-Line Pressure (7 proportional) + Park Hold + Park Release (2 latching)
-= 9 solenoids. The MAX22200 is octal so flagging in case it's not on
-your radar. Wrote up four options with safety reasoning around the
-Park subsystem (channel sharing crosses a safety boundary I wouldn't
-cross myself, but YMMV); two MAX22200s daisy-chained on SPI is the
-option I'd default to. No claim to know the right answer — just didn't
-want to keep this in my head.
-
 **A draft DBC and codec for a TCU↔VCU CAN protocol.**
 Five frames, 500 kbit/s, openinverter style — modelled on
 `oi-inverter.dbc`. Pump fields are grounded in your post 7 from #7103
