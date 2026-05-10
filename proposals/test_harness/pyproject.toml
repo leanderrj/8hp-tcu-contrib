@@ -1,0 +1,13 @@
+[project]
+name = "zf8hp-test-harness"
+version = "0.1.0"
+description = "Capture-replay and DBC round-trip tests for the ZF 8HP TCU project"
+requires-python = ">=3.10"
+dependencies = [
+    "cantools>=39",
+    "pytest>=8",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-v"
