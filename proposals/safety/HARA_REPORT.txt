@@ -1,0 +1,212 @@
+==========================================================================================
+HAZARD ANALYSIS AND RISK ASSESSMENT (HARA) — OI 8HP TCU
+Generated: 2026-05-10
+Reference: ISO 26262-3:2018 Clause 7
+Framework: caros.safety.asil (/Users/leanderrj/Code/caros)
+==========================================================================================
+
+--- T001: Park pawl drops while driving ---
+  Description     : TCU energises the Park Hold solenoid (TCM pin 5) with the vehicle moving at speed, causing the parking pawl to attempt to drop into a rotating output shaft. Mechanical damage to the gearbox; on engagement, output shaft locks; possible skid / loss of control.
+  Operating sit.  : Vehicle in motion above ~5 km/h
+  Severity        : S3 (3)
+  Exposure        : E2 (2)
+  Controllability : C3 (3)
+  ASIL            : C
+  Safety goal     : Park Hold solenoid shall not be energised when vehicle speed (VCU_VehicleInfo.VehicleSpeed) exceeds 5 km/h, regardless of VCU_GearRequest.TargetGear.
+  Safe state      : Both Park Hold and Park Release solenoids de-energised; AnyFault bit set on TCU_Status1; ShiftFaultCode published.
+  FTTI            : 100 ms
+  Mitigations     :
+    - park_lock.cpp: VehicleStationaryEnough() gate before Hold pulse
+    - Bind layer: refuse RequestEngaged(true) unless speed sensor agrees
+    - MAX22200 over-current detection on the Park channel
+    - Two-of-two sensor sanity (Pos1 ⊕ Pos2) before reporting engaged
+
+--- T002: Park fails to engage when commanded (rollaway) ---
+  Description     : Driver selects Park, exits the vehicle. The TCU reports Park engaged on CAN but the pawl is in fact disengaged (sensor fault, mechanical jam, or commanded but not executed). Vehicle rolls, possibly into traffic or pedestrians.
+  Operating sit.  : Vehicle stationary, driver requests Park before exit
+  Severity        : S3 (3)
+  Exposure        : E3 (3)
+  Controllability : C3 (3)
+  ASIL            : D
+  Safety goal     : TCU shall publish ParkLock=1 only when both park-position sensors confirm the engaged state.
+  Safe state      : ParkLock=0 published; AnyFault=1; driver alerted via VCU to engage parking brake.
+  FTTI            : 500 ms
+  Mitigations     :
+    - park_lock.cpp DecodeSenseState: both sensors must agree on Engaged before reporting park_lock_engaged=true
+    - EngageTimeout fault if pulse expires without sensor change
+    - VCU pairs ParkLock=1 with parking-brake check before ignition off
+
+--- T003: Multi-element clutch engagement (driveline lockup) ---
+  Description     : Two clutches on different planetary stages are simultaneously energised, locking the driveline. At speed, this manifests as abrupt rear-wheel lock-up: skid, loss of stability, possible rear-end collision.
+  Operating sit.  : Vehicle in any forward gear at speed
+  Severity        : S3 (3)
+  Exposure        : E2 (2)
+  Controllability : C3 (3)
+  ASIL            : C
+  Safety goal     : Only valid 3-of-5 clutch combinations from the published ZF 8HP engagement schedule shall be commanded; transitions shall change exactly one element at a time.
+  Safe state      : All clutches commanded off; ShiftFaultCode = ClutchTableInconsistent; gearbox reverts to mechanical neutral.
+  FTTI            : 20 ms
+  Mitigations     :
+    - clutch_table.h static_assert: every adjacent gear pair differs by exactly one element
+    - shift_logic.cpp PlanNextStep: walks single-element steps only
+    - Solenoids::BuildFramesForChipMask refuses to enable >3 elements
+    - MAX22200 per-channel current monitoring; over-current → fault
+
+--- T004: Reverse engaged while moving forward at speed ---
+  Description     : Driver pushes shifter to R while rolling forward (e.g. hill-roll mistake). Reverse clutch engages against forward rotation; gearbox damage; abrupt deceleration; possible rear-end collision risk.
+  Operating sit.  : Vehicle rolling forward >5 km/h
+  Severity        : S3 (3)
+  Exposure        : E2 (2)
+  Controllability : C3 (3)
+  ASIL            : C
+  Safety goal     : Reverse engagement shall only proceed via Neutral and only when output-shaft RPM indicates vehicle is stationary or moving rearward.
+  Safe state      : Hold current gear; reject the request; raise fault.
+  FTTI            : 50 ms
+  Mitigations     :
+    - shift_logic.cpp PlanNextStep: forward → neutral → reverse path
+    - Bind layer: refuse R if output_shaft_rpm > 0 with vehicle
+    - VCU enforces brake-pedal-pressed precondition for R
+
+--- T005: Stuck-on solenoid (one element won't release) ---
+  Description     : After a shift, an outgoing clutch fails to drain (stuck valve, stuck solenoid, broken return spring). Two clutches active across stages — same hazard surface as T003 but introduced post-shift rather than at command.
+  Operating sit.  : During or shortly after a shift event
+  Severity        : S3 (3)
+  Exposure        : E2 (2)
+  Controllability : C2 (2)
+  ASIL            : B
+  Safety goal     : Solenoid-current readback shall confirm de-energisation within the overlap window; mismatch shall trigger limp.
+  Safe state      : All solenoids commanded off; ShiftLogic enters Limp; AnyFault and FaultBits[OverCurrent] published.
+  FTTI            : 120 ms
+  Mitigations     :
+    - MAX22200 OCP fault detection per channel
+    - Solenoids::DecodeFaults → TCU_Status2.FaultBits bit 7
+    - shift_logic.cpp Limp state on any clutch fault
+    - FaultStatus polled at end of every Overlap phase
+
+--- T006: Open-load solenoid (commanded clutch fails to engage) ---
+  Description     : Solenoid wiring or coil open-circuited; commanded clutch draws no current. Resulting clutch combination is invalid; powerflow is lost or rerouted unpredictably. Vehicle decelerates abruptly under load.
+  Operating sit.  : Any shift event or in-gear operation
+  Severity        : S2 (2)
+  Exposure        : E2 (2)
+  Controllability : C2 (2)
+  ASIL            : A
+  Safety goal     : MAX22200 open-load detection shall be enabled on every commanded channel; OLF shall be propagated to CAN within 100 ms.
+  Safe state      : Pre-shift: refuse the shift, hold current gear. In-gear: limp to nearest valid gear; FaultBits[SolOpen]=1.
+  FTTI            : 100 ms
+  Mitigations     :
+    - max22200_regs.h CFG_FAULT_DISABLE_OLF kept at 0 (active)
+    - Solenoids::FaultsToTcuStatus2Bits maps OLF → bit 0
+    - shift_logic.cpp: pre-flight current check before TorqueCut
+
+--- T007: VCU CAN frame stale or absent ---
+  Description     : VCU stops publishing VCU_GearRequest (cable break, VCU reset, brown-out). TCU has no driver-intent input; ambiguity about whether to hold gear, drop to Neutral, or fall to Limp.
+  Operating sit.  : Vehicle in any state; CAN bus disturbance
+  Severity        : S2 (2)
+  Exposure        : E3 (3)
+  Controllability : C2 (2)
+  ASIL            : B
+  Safety goal     : On VCU_GearRequest absence > 200 ms, TCU shall hold the current gear and publish FaultBits[CanStale]=1. TCU shall NOT auto-enter Neutral or Park, which could disengage drivetrain at speed.
+  Safe state      : Hold current gear; ShiftActive=0; AnyFault=1; TcuState=Limp if stale persists > 1 s.
+  FTTI            : 200 ms
+  Mitigations     :
+    - VCU_GearRequest counter (Counter520) advance check
+    - Per-frame staleness timer; FaultBits[CanStale] at 200 ms
+    - Hold-gear-on-loss policy enforced in bind layer
+
+--- T008: Spurious gear request from corrupted CAN frame ---
+  Description     : Bit error or hostile injection produces a VCU_GearRequest with TargetGear ≠ current gear. Without integrity checks, TCU initiates an unintended shift.
+  Operating sit.  : Vehicle in any state; CAN bus noise/attack
+  Severity        : S2 (2)
+  Exposure        : E1 (1)
+  Controllability : C2 (2)
+  ASIL            : QM
+  Safety goal     : Gear-change requests shall require N consecutive identical TargetGear values before action; counter rollback shall trigger CanStale fault.
+  Safe state      : Hold current gear; raise CanStale fault.
+  FTTI            : 50 ms
+  Mitigations     :
+    - Counter520 monotonicity check (low nibble +1 modulo 16)
+    - Two-frame consensus on TargetGear before initiating shift
+    - Future: per-ID CRC8 (same scheme as F30_Lever / iX4_Lever)
+
+--- T009: Aux 12 V pump fails while ICE off (hybrid only) ---
+  Description     : On HZ hybrid 'boxes the aux pump maintains line pressure while the ICE is stopped. Pump LIN failure → line pressure decays → clutches slip → unintended Neutral or staged engagement loss while moving.
+  Operating sit.  : Hybrid 8HP, ICE stopped, vehicle moving
+  Severity        : S2 (2)
+  Exposure        : E3 (3)
+  Controllability : C2 (2)
+  ASIL            : B
+  Safety goal     : Pump fault shall trigger Limp before line pressure drops below the minimum needed to hold the engaged clutch set.
+  Safe state      : VCU informed that ICE restart is required to maintain powerflow; FaultBits[LinComm]=1; PumpState reflects fault.
+  FTTI            : 500 ms
+  Mitigations     :
+    - lin_pump.py / firmware LIN master watchdog (byte-6 echo)
+    - PumpRetryCount published on TCU_PumpStatus
+    - TCU_PumpStatus.PumpLinFault propagation to FaultBits
+    - Bind layer: request VCU to start ICE on PumpLinFault
+
+--- T010: Speed sensor (input or output) fault ---
+  Description     : Input or output shaft speed sensor reports zero or stuck value while vehicle is moving. TCU has no slip feedback during shifts; harsh shifts or wrong gear inferred.
+  Operating sit.  : Vehicle moving in any forward gear
+  Severity        : S2 (2)
+  Exposure        : E2 (2)
+  Controllability : C2 (2)
+  ASIL            : A
+  Safety goal     : Speed sensor plausibility shall be cross-checked against the gear-ratio prediction (output_rpm × ratio ≈ input_rpm within ±10 % when no slip). Persistent mismatch shall fault.
+  Safe state      : Hold gear; refuse new shifts; FaultBits[SpeedSensor]=1; VCU asked to fall back to torque-limited mode.
+  FTTI            : 200 ms
+  Mitigations     :
+    - Cross-check input vs output RPM via clutch_table ratio
+    - Cross-check against VCU MotorRPM (where applicable)
+    - FaultBits[SpeedSensor] on persistent mismatch
+
+--- T011: TCU brown-out / unexpected reset while driving ---
+  Description     : Power supply transient resets the STM32. All MAX22200 outputs go high-Z; clutches drain; gearbox enters mechanical neutral; brief loss of powerflow at speed.
+  Operating sit.  : Vehicle moving; 12 V supply transient
+  Severity        : S2 (2)
+  Exposure        : E2 (2)
+  Controllability : C2 (2)
+  ASIL            : A
+  Safety goal     : TCU shall re-engage the previously-held gear within 500 ms of reset, or report FaultBits[Reset] and stay in Limp.
+  Safe state      : Mechanical neutral during reset window (default-safe MAX22200 high-Z); fast re-engagement once boot completes.
+  FTTI            : 500 ms
+  Mitigations     :
+    - STM32 brown-out detector configured at 4.4 V
+    - Last-known gear persisted before any state change
+    - MAX22200 default high-Z = mechanical neutral = safe
+    - Boot-time park-position sensor read decides Park vs gear
+
+--- T012: Torque-cut handshake timeout (harsh shift) ---
+  Description     : VCU never asserts TorqueCutAck during the budget window. TCU either shifts under torque (clutch wear, lurch) or aborts. Driver discomfort but no safety hazard at rated engine torque.
+  Operating sit.  : Any in-drive upshift or downshift
+  Severity        : S1 (1)
+  Exposure        : E3 (3)
+  Controllability : C1 (1)
+  ASIL            : QM
+  Safety goal     : On TorqueCutAck timeout, the shift shall abort and the current gear shall be held.
+  Safe state      : Current gear held; ShiftFaultCode = TorqueCutTimeout.
+  FTTI            : 50 ms
+  Mitigations     :
+    - shift_logic.cpp TorqueCut phase has explicit timeout budget
+    - test_shift_logic.cpp: TestTorqueCutTimeoutAbortsShift
+    - Repeated timeouts → soft-Limp (skip torque-blended shifts)
+
+------------------------------------------------------------------------------------------
+SUMMARY
+------------------------------------------------------------------------------------------
+ID     Name                                            S  E  C  ASIL  
+------------------------------------------------------------------------------------------
+T001   Park pawl drops while driving                  S3 E2 C3  C     
+T002   Park fails to engage when commanded (rollaway) S3 E3 C3  D     
+T003   Multi-element clutch engagement (driveline lockup) S3 E2 C3  C     
+T004   Reverse engaged while moving forward at speed  S3 E2 C3  C     
+T005   Stuck-on solenoid (one element won't release)  S3 E2 C2  B     
+T006   Open-load solenoid (commanded clutch fails to engage) S2 E2 C2  A     
+T007   VCU CAN frame stale or absent                  S2 E3 C2  B     
+T008   Spurious gear request from corrupted CAN frame S2 E1 C2  QM    
+T009   Aux 12 V pump fails while ICE off (hybrid only) S2 E3 C2  B     
+T010   Speed sensor (input or output) fault           S2 E2 C2  A     
+T011   TCU brown-out / unexpected reset while driving S2 E2 C2  A     
+T012   Torque-cut handshake timeout (harsh shift)     S1 E3 C1  QM    
+
+ASIL distribution: {'C': 3, 'D': 1, 'B': 3, 'A': 3, 'QM': 2}
+
