@@ -1,0 +1,5 @@
+# SHA-256 fingerprints of reference materials in this directory.
+# Populated as each PDF is manually downloaded (see REFERENCES.md).
+# Verify with:  shasum -c SHA256SUMS
+#
+# Format: <sha256>  <filename>
