@@ -1,0 +1,3 @@
+[submodule "upstream/8HP-TCU"]
+	path = upstream/8HP-TCU
+	url = https://github.com/damienmaguire/8HP-TCU.git
