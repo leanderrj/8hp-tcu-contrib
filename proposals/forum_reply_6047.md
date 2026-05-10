@@ -54,7 +54,7 @@ ref decoder + LIN pump simulator + DBC encode/decode property tests.
 40+ assertions. Mostly built it for my own sanity but it picks up new
 captures with one line in `conftest.py`.
 
-**Repo:** *(leander to fill in URL)*
+**Repo:** https://github.com/leanderrj/8hp-tcu-contrib
 
 Three things deliberately not in this — the LIN pump (your work),
 factory PT-CAN integration (your call whether that's a goal), and the
