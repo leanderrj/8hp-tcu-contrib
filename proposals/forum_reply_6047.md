@@ -37,29 +37,17 @@ xorout. Notable: `0x3FD` xorout `0x70` over bytes [1..4] matches what
 `F30_Lever::sendcan` already emits — so F30 TX format is unchanged on
 G26. Catalog is in the repo for whoever else hits this.
 
-**A draft DBC and codec for a TCU↔VCU CAN protocol.**
-Five frames, 500 kbit/s, openinverter style — modelled on
-`oi-inverter.dbc`. Pump fields are grounded in your post 7 from #7103
-(RPM = byte3 × 32, V = byte4 × 0.1, the state-machine values).
-Generated a C99 codec via cantools, wrote a thin C++ wrapper
-(`Can_ZF8HP`) so both sides of the link consume the same generated
-source. 24 host assertions. Open questions in the protocol doc — IDs,
-counter/CRC, torque-handshake during shifts — none have a strong
-opinion attached, just wanted concrete decisions to react to rather
-than nothing.
-
 **Test harness.**
 Pytest harness that replays the full 553-frame corpus through a Python
-ref decoder + LIN pump simulator + DBC encode/decode property tests.
-40+ assertions. Mostly built it for my own sanity but it picks up new
+reference iX4_Lever decoder + a LIN pump simulator that mirrors the
+state machine from your post 7 in #7103. ~50 assertions; picks up new
 captures with one line in `conftest.py`.
 
 **Repo:** https://github.com/leanderrj/8hp-tcu-contrib
 
 Three things deliberately not in this — the LIN pump (your work),
 factory PT-CAN integration (your call whether that's a goal), and the
-TCU firmware itself (no hardware on my end). All independent of each
-other; pull or ignore freely.
+TCU firmware itself (no hardware on my end). Pull or ignore freely.
 
 ---
 
