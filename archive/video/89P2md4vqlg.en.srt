@@ -1,0 +1,1345 @@
+1
+00:00:00,000 --> 00:00:02,430
+
+Hello folks, welcome back to your most
+
+2
+00:00:02,430 --> 00:00:02,440
+Hello folks, welcome back to your most
+ 
+
+3
+00:00:02,440 --> 00:00:06,190
+Hello folks, welcome back to your most
+anticipated pump of doom update. Good
+
+4
+00:00:06,190 --> 00:00:06,200
+anticipated pump of doom update. Good
+ 
+
+5
+00:00:06,200 --> 00:00:09,470
+anticipated pump of doom update. Good
+news, pump of doom is now running.
+
+6
+00:00:09,470 --> 00:00:09,480
+news, pump of doom is now running.
+ 
+
+7
+00:00:09,480 --> 00:00:37,990
+news, pump of doom is now running.
+Let's go take a look.
+
+8
+00:00:37,990 --> 00:00:38,000
+
+ 
+
+9
+00:00:38,000 --> 00:00:41,510
+
+So, that only took nine days
+
+10
+00:00:41,510 --> 00:00:41,520
+So, that only took nine days
+ 
+
+11
+00:00:41,520 --> 00:00:43,270
+So, that only took nine days
+and in the end
+
+12
+00:00:43,270 --> 00:00:43,280
+and in the end
+ 
+
+13
+00:00:43,280 --> 00:00:46,310
+and in the end
+a lot of assistance from a very kind
+
+14
+00:00:46,310 --> 00:00:46,320
+a lot of assistance from a very kind
+ 
+
+15
+00:00:46,320 --> 00:00:47,550
+a lot of assistance from a very kind
+person.
+
+16
+00:00:47,550 --> 00:00:47,560
+person.
+ 
+
+17
+00:00:47,560 --> 00:00:49,030
+person.
+Now,
+
+18
+00:00:49,030 --> 00:00:49,040
+Now,
+ 
+
+19
+00:00:49,040 --> 00:00:50,790
+Now,
+the way with the pump running we can
+
+20
+00:00:50,790 --> 00:00:50,800
+the way with the pump running we can
+ 
+
+21
+00:00:50,800 --> 00:00:53,910
+the way with the pump running we can
+make some hydraulic pressure from a
+
+22
+00:00:53,910 --> 00:00:53,920
+make some hydraulic pressure from a
+ 
+
+23
+00:00:53,920 --> 00:00:57,110
+make some hydraulic pressure from a
+standstill, which is what we want. So,
+
+24
+00:00:57,110 --> 00:00:57,120
+standstill, which is what we want. So,
+ 
+
+25
+00:00:57,120 --> 00:00:59,790
+standstill, which is what we want. So,
+can now turn our attention to the TCU or
+
+26
+00:00:59,790 --> 00:00:59,800
+can now turn our attention to the TCU or
+ 
+
+27
+00:00:59,800 --> 00:01:03,630
+can now turn our attention to the TCU or
+the TCM, whichever you prefer to to call
+
+28
+00:01:03,630 --> 00:01:03,640
+the TCM, whichever you prefer to to call
+ 
+
+29
+00:01:03,640 --> 00:01:05,630
+the TCM, whichever you prefer to to call
+it. Now, in the
+
+30
+00:01:05,630 --> 00:01:05,640
+it. Now, in the
+ 
+
+31
+00:01:05,640 --> 00:01:09,030
+it. Now, in the
+the little bit of in the AHP swapping
+
+32
+00:01:09,030 --> 00:01:09,040
+the little bit of in the AHP swapping
+ 
+
+33
+00:01:09,040 --> 00:01:11,950
+the little bit of in the AHP swapping
+land there's kind of two ways that they
+
+34
+00:01:11,950 --> 00:01:11,960
+land there's kind of two ways that they
+ 
+
+35
+00:01:11,960 --> 00:01:13,790
+land there's kind of two ways that they
+seem to do this.
+
+36
+00:01:13,790 --> 00:01:13,800
+seem to do this.
+ 
+
+37
+00:01:13,800 --> 00:01:17,430
+seem to do this.
+One is to run with the existing TCM, so
+
+38
+00:01:17,430 --> 00:01:17,440
+One is to run with the existing TCM, so
+ 
+
+39
+00:01:17,440 --> 00:01:18,670
+One is to run with the existing TCM, so
+there's a
+
+40
+00:01:18,670 --> 00:01:18,680
+there's a
+ 
+
+41
+00:01:18,680 --> 00:01:20,630
+there's a
+circuit in there.
+
+42
+00:01:20,630 --> 00:01:20,640
+circuit in there.
+ 
+
+43
+00:01:20,640 --> 00:01:23,270
+circuit in there.
+And they kind of
+
+44
+00:01:23,270 --> 00:01:23,280
+And they kind of
+ 
+
+45
+00:01:23,280 --> 00:01:26,830
+And they kind of
+do some secret handshake stuff and
+
+46
+00:01:26,830 --> 00:01:26,840
+do some secret handshake stuff and
+ 
+
+47
+00:01:26,840 --> 00:01:30,430
+do some secret handshake stuff and
+basically get it to run as if it were in
+
+48
+00:01:30,430 --> 00:01:30,440
+basically get it to run as if it were in
+ 
+
+49
+00:01:30,440 --> 00:01:32,470
+basically get it to run as if it were in
+the parent vehicle.
+
+50
+00:01:32,470 --> 00:01:32,480
+the parent vehicle.
+ 
+
+51
+00:01:32,480 --> 00:01:35,350
+the parent vehicle.
+And the second way is you cut this can
+
+52
+00:01:35,350 --> 00:01:35,360
+And the second way is you cut this can
+ 
+
+53
+00:01:35,360 --> 00:01:36,590
+And the second way is you cut this can
+open
+
+54
+00:01:36,590 --> 00:01:36,600
+open
+ 
+
+55
+00:01:36,600 --> 00:01:39,190
+open
+and replace the electronics in there
+
+56
+00:01:39,190 --> 00:01:39,200
+and replace the electronics in there
+ 
+
+57
+00:01:39,200 --> 00:01:41,150
+and replace the electronics in there
+with a board like this one. This is just
+
+58
+00:01:41,150 --> 00:01:41,160
+with a board like this one. This is just
+ 
+
+59
+00:01:41,160 --> 00:01:42,430
+with a board like this one. This is just
+one I
+
+60
+00:01:42,430 --> 00:01:42,440
+one I
+ 
+
+61
+00:01:42,440 --> 00:01:47,070
+one I
+made up. It's kind of based on this one.
+
+62
+00:01:47,070 --> 00:01:47,080
+made up. It's kind of based on this one.
+ 
+
+63
+00:01:47,080 --> 00:01:49,350
+made up. It's kind of based on this one.
+Let me get that out of here.
+
+64
+00:01:49,350 --> 00:01:49,360
+Let me get that out of here.
+ 
+
+65
+00:01:49,360 --> 00:01:53,110
+Let me get that out of here.
+This one also comes with this kind of a
+
+66
+00:01:53,110 --> 00:01:53,120
+This one also comes with this kind of a
+ 
+
+67
+00:01:53,120 --> 00:01:56,430
+This one also comes with this kind of a
+kind of a nifty cover.
+
+68
+00:01:56,430 --> 00:01:56,440
+kind of a nifty cover.
+ 
+
+69
+00:01:56,440 --> 00:01:57,990
+kind of a nifty cover.
+And
+
+70
+00:01:57,990 --> 00:01:58,000
+And
+ 
+
+71
+00:01:58,000 --> 00:02:00,190
+And
+it's basically like that.
+
+72
+00:02:00,190 --> 00:02:00,200
+it's basically like that.
+ 
+
+73
+00:02:00,200 --> 00:02:02,870
+it's basically like that.
+So that board goes inside there.
+
+74
+00:02:02,870 --> 00:02:02,880
+So that board goes inside there.
+ 
+
+75
+00:02:02,880 --> 00:02:04,670
+So that board goes inside there.
+And what that basically does is it
+
+76
+00:02:04,670 --> 00:02:04,680
+And what that basically does is it
+ 
+
+77
+00:02:04,680 --> 00:02:07,430
+And what that basically does is it
+connects all of the valves and things
+
+78
+00:02:07,430 --> 00:02:07,440
+connects all of the valves and things
+ 
+
+79
+00:02:07,440 --> 00:02:10,190
+connects all of the valves and things
+like the speed sensors and that
+
+80
+00:02:10,190 --> 00:02:10,200
+like the speed sensors and that
+ 
+
+81
+00:02:10,200 --> 00:02:14,830
+like the speed sensors and that
+directly to the external connector. So
+
+82
+00:02:14,830 --> 00:02:14,840
+directly to the external connector. So
+ 
+
+83
+00:02:14,840 --> 00:02:17,790
+directly to the external connector. So
+you can then control the valves with an
+
+84
+00:02:17,790 --> 00:02:17,800
+you can then control the valves with an
+ 
+
+85
+00:02:17,800 --> 00:02:20,830
+you can then control the valves with an
+external control box.
+
+86
+00:02:20,830 --> 00:02:20,840
+external control box.
+ 
+
+87
+00:02:20,840 --> 00:02:22,430
+external control box.
+Um
+
+88
+00:02:22,430 --> 00:02:22,440
+Um
+ 
+
+89
+00:02:22,440 --> 00:02:24,150
+Um
+and that was the way that I was going to
+
+90
+00:02:24,150 --> 00:02:24,160
+and that was the way that I was going to
+ 
+
+91
+00:02:24,160 --> 00:02:27,870
+and that was the way that I was going to
+go, to be honest. I was just going to
+
+92
+00:02:27,870 --> 00:02:27,880
+go, to be honest. I was just going to
+ 
+
+93
+00:02:27,880 --> 00:02:30,310
+go, to be honest. I was just going to
+I'd have to change the design of this
+
+94
+00:02:30,310 --> 00:02:30,320
+I'd have to change the design of this
+ 
+
+95
+00:02:30,320 --> 00:02:32,910
+I'd have to change the design of this
+board cuz this doesn't have the LIN
+
+96
+00:02:32,910 --> 00:02:32,920
+board cuz this doesn't have the LIN
+ 
+
+97
+00:02:32,920 --> 00:02:35,550
+board cuz this doesn't have the LIN
+connection, for example, for the pump.
+
+98
+00:02:35,550 --> 00:02:35,560
+connection, for example, for the pump.
+ 
+
+99
+00:02:35,560 --> 00:02:38,190
+connection, for example, for the pump.
+But other than that, it's fine.
+
+100
+00:02:38,190 --> 00:02:38,200
+But other than that, it's fine.
+ 
+
+101
+00:02:38,200 --> 00:02:39,870
+But other than that, it's fine.
+Um
+
+102
+00:02:39,870 --> 00:02:39,880
+Um
+ 
+
+103
+00:02:39,880 --> 00:02:43,030
+Um
+so that's the way I was going to go.
+
+104
+00:02:43,030 --> 00:02:43,040
+so that's the way I was going to go.
+ 
+
+105
+00:02:43,040 --> 00:02:44,670
+so that's the way I was going to go.
+But I've been, obviously cuz I've been
+
+106
+00:02:44,670 --> 00:02:44,680
+But I've been, obviously cuz I've been
+ 
+
+107
+00:02:44,680 --> 00:02:47,230
+But I've been, obviously cuz I've been
+working on the LIN and the pump, I was
+
+108
+00:02:47,230 --> 00:02:47,240
+working on the LIN and the pump, I was
+ 
+
+109
+00:02:47,240 --> 00:02:49,750
+working on the LIN and the pump, I was
+having some thoughts. And so I want to
+
+110
+00:02:49,750 --> 00:02:49,760
+having some thoughts. And so I want to
+ 
+
+111
+00:02:49,760 --> 00:02:52,550
+having some thoughts. And so I want to
+run this past you folks and see what you
+
+112
+00:02:52,550 --> 00:02:52,560
+run this past you folks and see what you
+ 
+
+113
+00:02:52,560 --> 00:02:55,430
+run this past you folks and see what you
+think. Maybe there's kind of a forward
+
+114
+00:02:55,430 --> 00:02:55,440
+think. Maybe there's kind of a forward
+ 
+
+115
+00:02:55,440 --> 00:02:57,190
+think. Maybe there's kind of a forward
+option here.
+
+116
+00:02:57,190 --> 00:02:57,200
+option here.
+ 
+
+117
+00:02:57,200 --> 00:03:00,990
+option here.
+So I'm thinking, rather than having
+
+118
+00:03:00,990 --> 00:03:01,000
+So I'm thinking, rather than having
+ 
+
+119
+00:03:01,000 --> 00:03:02,910
+So I'm thinking, rather than having
+a big kind of, you know, you have a
+
+120
+00:03:02,910 --> 00:03:02,920
+a big kind of, you know, you have a
+ 
+
+121
+00:03:02,920 --> 00:03:04,949
+a big kind of, you know, you have a
+board you put in here and then you have
+
+122
+00:03:04,949 --> 00:03:04,959
+board you put in here and then you have
+ 
+
+123
+00:03:04,959 --> 00:03:07,470
+board you put in here and then you have
+your external controller and harnesses
+
+124
+00:03:07,470 --> 00:03:07,480
+your external controller and harnesses
+ 
+
+125
+00:03:07,480 --> 00:03:09,910
+your external controller and harnesses
+and all that good stuff.
+
+126
+00:03:09,910 --> 00:03:09,920
+and all that good stuff.
+ 
+
+127
+00:03:09,920 --> 00:03:11,710
+and all that good stuff.
+Uh what if
+
+128
+00:03:11,710 --> 00:03:11,720
+Uh what if
+ 
+
+129
+00:03:11,720 --> 00:03:16,350
+Uh what if
+instead, we actually designed our
+
+130
+00:03:16,350 --> 00:03:16,360
+instead, we actually designed our
+ 
+
+131
+00:03:16,360 --> 00:03:19,550
+instead, we actually designed our
+open inverter TCM to go on that board.
+
+132
+00:03:19,550 --> 00:03:19,560
+open inverter TCM to go on that board.
+ 
+
+133
+00:03:19,560 --> 00:03:20,150
+open inverter TCM to go on that board.
+Uh
+
+134
+00:03:20,150 --> 00:03:20,160
+Uh
+ 
+
+135
+00:03:20,160 --> 00:03:23,630
+Uh
+we put our STM32, little power supply,
+
+136
+00:03:23,630 --> 00:03:23,640
+we put our STM32, little power supply,
+ 
+
+137
+00:03:23,640 --> 00:03:26,270
+we put our STM32, little power supply,
+support circuitry on a valve driver
+
+138
+00:03:26,270 --> 00:03:26,280
+support circuitry on a valve driver
+ 
+
+139
+00:03:26,280 --> 00:03:28,470
+support circuitry on a valve driver
+chip, which I have found.
+
+140
+00:03:28,470 --> 00:03:28,480
+chip, which I have found.
+ 
+
+141
+00:03:28,480 --> 00:03:31,310
+chip, which I have found.
+It's uh by Maxim. It's a very small
+
+142
+00:03:31,310 --> 00:03:31,320
+It's uh by Maxim. It's a very small
+ 
+
+143
+00:03:31,320 --> 00:03:33,270
+It's uh by Maxim. It's a very small
+chip, but it can literally drive all the
+
+144
+00:03:33,270 --> 00:03:33,280
+chip, but it can literally drive all the
+ 
+
+145
+00:03:33,280 --> 00:03:35,990
+chip, but it can literally drive all the
+valves from a single part.
+
+146
+00:03:35,990 --> 00:03:36,000
+valves from a single part.
+ 
+
+147
+00:03:36,000 --> 00:03:38,430
+valves from a single part.
+And we literally put a CAN transceiver
+
+148
+00:03:38,430 --> 00:03:38,440
+And we literally put a CAN transceiver
+ 
+
+149
+00:03:38,440 --> 00:03:40,350
+And we literally put a CAN transceiver
+on that, a LIN transceiver to talk to
+
+150
+00:03:40,350 --> 00:03:40,360
+on that, a LIN transceiver to talk to
+ 
+
+151
+00:03:40,360 --> 00:03:42,270
+on that, a LIN transceiver to talk to
+the pump if you're
+
+152
+00:03:42,270 --> 00:03:42,280
+the pump if you're
+ 
+
+153
+00:03:42,280 --> 00:03:44,750
+the pump if you're
+using a hybrid one.
+
+154
+00:03:44,750 --> 00:03:44,760
+using a hybrid one.
+ 
+
+155
+00:03:44,760 --> 00:03:47,509
+using a hybrid one.
+And then we basically put this
+
+156
+00:03:47,509 --> 00:03:47,519
+And then we basically put this
+ 
+
+157
+00:03:47,519 --> 00:03:50,150
+And then we basically put this
+put the this board in there, in place of
+
+158
+00:03:50,150 --> 00:03:50,160
+put the this board in there, in place of
+ 
+
+159
+00:03:50,160 --> 00:03:52,710
+put the this board in there, in place of
+the existing TCM.
+
+160
+00:03:52,710 --> 00:03:52,720
+the existing TCM.
+ 
+
+161
+00:03:52,720 --> 00:03:54,390
+the existing TCM.
+And then
+
+162
+00:03:54,390 --> 00:03:54,400
+And then
+ 
+
+163
+00:03:54,400 --> 00:03:55,230
+And then
+um
+
+164
+00:03:55,230 --> 00:03:55,240
+um
+ 
+
+165
+00:03:55,240 --> 00:03:57,750
+um
+we can put this back into the gearbox
+
+166
+00:03:57,750 --> 00:03:57,760
+we can put this back into the gearbox
+ 
+
+167
+00:03:57,760 --> 00:03:59,350
+we can put this back into the gearbox
+and then we just give it
+
+168
+00:03:59,350 --> 00:03:59,360
+and then we just give it
+ 
+
+169
+00:03:59,360 --> 00:04:02,710
+and then we just give it
+ground 12 volts, CAN high, and CAN low
+
+170
+00:04:02,710 --> 00:04:02,720
+ground 12 volts, CAN high, and CAN low
+ 
+
+171
+00:04:02,720 --> 00:04:04,510
+ground 12 volts, CAN high, and CAN low
+low and we can
+
+172
+00:04:04,510 --> 00:04:04,520
+low and we can
+ 
+
+173
+00:04:04,520 --> 00:04:06,830
+low and we can
+you know, connect our web interface, we
+
+174
+00:04:06,830 --> 00:04:06,840
+you know, connect our web interface, we
+ 
+
+175
+00:04:06,840 --> 00:04:09,030
+you know, connect our web interface, we
+can send commands to it, we can send
+
+176
+00:04:09,030 --> 00:04:09,040
+can send commands to it, we can send
+ 
+
+177
+00:04:09,040 --> 00:04:11,750
+can send commands to it, we can send
+software updates and all that kind of
+
+178
+00:04:11,750 --> 00:04:11,760
+software updates and all that kind of
+ 
+
+179
+00:04:11,760 --> 00:04:14,350
+software updates and all that kind of
+thing. So, that's where I'm thinking of
+
+180
+00:04:14,350 --> 00:04:14,360
+thing. So, that's where I'm thinking of
+ 
+
+181
+00:04:14,360 --> 00:04:16,430
+thing. So, that's where I'm thinking of
+going, folks, because
+
+182
+00:04:16,430 --> 00:04:16,440
+going, folks, because
+ 
+
+183
+00:04:16,440 --> 00:04:18,509
+going, folks, because
+even a board like that, we can easily
+
+184
+00:04:18,509 --> 00:04:18,519
+even a board like that, we can easily
+ 
+
+185
+00:04:18,519 --> 00:04:22,310
+even a board like that, we can easily
+make six-layer now with JLC.
+
+186
+00:04:22,310 --> 00:04:22,320
+make six-layer now with JLC.
+ 
+
+187
+00:04:22,320 --> 00:04:25,830
+make six-layer now with JLC.
+Um so, it would be well feasible, I
+
+188
+00:04:25,830 --> 00:04:25,840
+Um so, it would be well feasible, I
+ 
+
+189
+00:04:25,840 --> 00:04:29,110
+Um so, it would be well feasible, I
+think, to do a
+
+190
+00:04:29,110 --> 00:04:29,120
+think, to do a
+ 
+
+191
+00:04:29,120 --> 00:04:31,550
+think, to do a
+a kind of a hybrid of the two, if you
+
+192
+00:04:31,550 --> 00:04:31,560
+a kind of a hybrid of the two, if you
+ 
+
+193
+00:04:31,560 --> 00:04:34,790
+a kind of a hybrid of the two, if you
+don't mind the pun. So, we push a new
+
+194
+00:04:34,790 --> 00:04:34,800
+don't mind the pun. So, we push a new
+ 
+
+195
+00:04:34,800 --> 00:04:38,950
+don't mind the pun. So, we push a new
+TCM inside the TCM and then control that
+
+196
+00:04:38,950 --> 00:04:38,960
+TCM inside the TCM and then control that
+ 
+
+197
+00:04:38,960 --> 00:04:42,710
+TCM inside the TCM and then control that
+via CAN externally.
+
+198
+00:04:42,710 --> 00:04:42,720
+via CAN externally.
+ 
+
+199
+00:04:42,720 --> 00:04:44,390
+via CAN externally.
+So, that's kind of where my thoughts are
+
+200
+00:04:44,390 --> 00:04:44,400
+So, that's kind of where my thoughts are
+ 
+
+201
+00:04:44,400 --> 00:04:46,590
+So, that's kind of where my thoughts are
+at the minute, folks. Uh let me know
+
+202
+00:04:46,590 --> 00:04:46,600
+at the minute, folks. Uh let me know
+ 
+
+203
+00:04:46,600 --> 00:04:49,750
+at the minute, folks. Uh let me know
+what you think in the comments, please.
+
+204
+00:04:49,750 --> 00:04:49,760
+what you think in the comments, please.
+ 
+
+205
+00:04:49,760 --> 00:04:51,310
+what you think in the comments, please.
+So, we'd have a
+
+206
+00:04:51,310 --> 00:04:51,320
+So, we'd have a
+ 
+
+207
+00:04:51,320 --> 00:04:54,190
+So, we'd have a
+board like that, pretty much that size,
+
+208
+00:04:54,190 --> 00:04:54,200
+board like that, pretty much that size,
+ 
+
+209
+00:04:54,200 --> 00:04:56,870
+board like that, pretty much that size,
+um but we'd have our components on on
+
+210
+00:04:56,870 --> 00:04:56,880
+um but we'd have our components on on
+ 
+
+211
+00:04:56,880 --> 00:04:58,030
+um but we'd have our components on on
+here
+
+212
+00:04:58,030 --> 00:04:58,040
+here
+ 
+
+213
+00:04:58,040 --> 00:05:00,350
+here
+for our STM32-based
+
+214
+00:05:00,350 --> 00:05:00,360
+for our STM32-based
+ 
+
+215
+00:05:00,360 --> 00:05:05,070
+for our STM32-based
+TCM. So,
+
+216
+00:05:05,070 --> 00:05:05,080
+
+ 
+
+217
+00:05:05,080 --> 00:05:07,430
+
+that's about it. As always, don't forget
+
+218
+00:05:07,430 --> 00:05:07,440
+that's about it. As always, don't forget
+ 
+
+219
+00:05:07,440 --> 00:05:10,190
+that's about it. As always, don't forget
+to dislike this garbage.
+
+220
+00:05:10,190 --> 00:05:10,200
+to dislike this garbage.
+ 
+
+221
+00:05:10,200 --> 00:05:11,909
+to dislike this garbage.
+Um don't subscribe. If you are
+
+222
+00:05:11,909 --> 00:05:11,919
+Um don't subscribe. If you are
+ 
+
+223
+00:05:11,919 --> 00:05:14,390
+Um don't subscribe. If you are
+subscribed, unsubscribe.
+
+224
+00:05:14,390 --> 00:05:14,400
+subscribed, unsubscribe.
+ 
+
+225
+00:05:14,400 --> 00:05:15,710
+subscribed, unsubscribe.
+Um
+
+226
+00:05:15,710 --> 00:05:15,720
+Um
+ 
+
+227
+00:05:15,720 --> 00:05:17,630
+Um
+so, you don't have to be exposed to this
+
+228
+00:05:17,630 --> 00:05:17,640
+so, you don't have to be exposed to this
+ 
+
+229
+00:05:17,640 --> 00:05:20,190
+so, you don't have to be exposed to this
+kind of nonsense any further.
+
+230
+00:05:20,190 --> 00:05:20,200
+kind of nonsense any further.
+ 
+
+231
+00:05:20,200 --> 00:05:22,230
+kind of nonsense any further.
+Uh so, I'm going to go ahead in the next
+
+232
+00:05:22,230 --> 00:05:22,240
+Uh so, I'm going to go ahead in the next
+ 
+
+233
+00:05:22,240 --> 00:05:25,950
+Uh so, I'm going to go ahead in the next
+episode, I'll get the CAN open on that
+
+234
+00:05:25,950 --> 00:05:25,960
+episode, I'll get the CAN open on that
+ 
+
+235
+00:05:25,960 --> 00:05:29,950
+episode, I'll get the CAN open on that
+uh TCM that I have there on the bench. I
+
+236
+00:05:29,950 --> 00:05:29,960
+uh TCM that I have there on the bench. I
+ 
+
+237
+00:05:29,960 --> 00:05:32,830
+uh TCM that I have there on the bench. I
+will start kind of working out what pins
+
+238
+00:05:32,830 --> 00:05:32,840
+will start kind of working out what pins
+ 
+
+239
+00:05:32,840 --> 00:05:36,070
+will start kind of working out what pins
+we need to have on here and how it would
+
+240
+00:05:36,070 --> 00:05:36,080
+we need to have on here and how it would
+ 
+
+241
+00:05:36,080 --> 00:05:37,750
+we need to have on here and how it would
+kind of work out. But, I think a little
+
+242
+00:05:37,750 --> 00:05:37,760
+kind of work out. But, I think a little
+ 
+
+243
+00:05:37,760 --> 00:05:40,230
+kind of work out. But, I think a little
+board that size
+
+244
+00:05:40,230 --> 00:05:40,240
+board that size
+ 
+
+245
+00:05:40,240 --> 00:05:43,070
+board that size
+with a 32F1,
+
+246
+00:05:43,070 --> 00:05:43,080
+with a 32F1,
+ 
+
+247
+00:05:43,080 --> 00:05:45,110
+with a 32F1,
+CAN transceiver, LIN transceiver, a
+
+248
+00:05:45,110 --> 00:05:45,120
+CAN transceiver, LIN transceiver, a
+ 
+
+249
+00:05:45,120 --> 00:05:47,550
+CAN transceiver, LIN transceiver, a
+little power supply, and one of those
+
+250
+00:05:47,550 --> 00:05:47,560
+little power supply, and one of those
+ 
+
+251
+00:05:47,560 --> 00:05:48,990
+little power supply, and one of those
+Maxim
+
+252
+00:05:48,990 --> 00:05:49,000
+Maxim
+ 
+
+253
+00:05:49,000 --> 00:05:51,630
+Maxim
+valve driver chips
+
+254
+00:05:51,630 --> 00:05:51,640
+valve driver chips
+ 
+
+255
+00:05:51,640 --> 00:05:55,350
+valve driver chips
+would work quite well. So, don't know.
+
+256
+00:05:55,350 --> 00:05:55,360
+would work quite well. So, don't know.
+ 
+
+257
+00:05:55,360 --> 00:05:56,390
+would work quite well. So, don't know.
+We'll
+
+258
+00:05:56,390 --> 00:05:56,400
+We'll
+ 
+
+259
+00:05:56,400 --> 00:05:58,510
+We'll
+see what we can do. Anyway, I need to be
+
+260
+00:05:58,510 --> 00:05:58,520
+see what we can do. Anyway, I need to be
+ 
+
+261
+00:05:58,520 --> 00:06:00,470
+see what we can do. Anyway, I need to be
+something different.
+
+262
+00:06:00,470 --> 00:06:00,480
+something different.
+ 
+
+263
+00:06:00,480 --> 00:06:02,790
+something different.
+There you go. All right, folks. That's
+
+264
+00:06:02,790 --> 00:06:02,800
+There you go. All right, folks. That's
+ 
+
+265
+00:06:02,800 --> 00:06:06,990
+There you go. All right, folks. That's
+enough of me talking nonsense.
+
+266
+00:06:06,990 --> 00:06:07,000
+
+ 
+
+267
+00:06:07,000 --> 00:06:13,070
+
+So, until we see you next time then.
+
+268
+00:06:13,070 --> 00:06:13,080
+
+ 
+
+269
+00:06:13,080 --> 00:06:17,120
+
+Happy TCM designing.
+
